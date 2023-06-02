@@ -1,5 +1,5 @@
 import 'package:action_slider/action_slider.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/common_widgets/welcomescreen_2.dart';
 import 'package:flutter/material.dart';
 

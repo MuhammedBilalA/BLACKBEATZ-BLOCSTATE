@@ -1,5 +1,5 @@
 import 'package:action_slider/action_slider.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/common_widgets/snackbar.dart';
 import 'package:black_beatz/screens/navbar_screens/bottom_navigation_bar.dart';
 import 'package:black_beatz/main.dart';

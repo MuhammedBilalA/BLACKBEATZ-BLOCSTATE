@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:black_beatz/database/playlist/playlist_function/playlist_function.dart';
 import 'package:black_beatz/database/songs/songs_db_model/songs_db_model.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/common_widgets/snackbar.dart';
 import 'package:black_beatz/screens/playlist_screens/playlist_class.dart';
 import 'package:black_beatz/screens/playlist_screens/playlist_screen.dart';

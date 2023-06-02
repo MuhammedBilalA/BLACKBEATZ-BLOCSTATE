@@ -1,4 +1,4 @@
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/home_screens/vertical_scroll.dart';
 import 'package:black_beatz/screens/playing_screen/mini_player.dart';
 import 'package:flutter/material.dart';

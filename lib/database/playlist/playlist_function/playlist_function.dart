@@ -25,11 +25,8 @@ Future playlistAddDB(Songs addingSong, String playlistName) async {
       break;
     }
   }
-
   plusiconNotifier.notifyListeners();
-  
-
-  
+   
 }
 
 Future playlistRemoveDB(Songs removingSong, String playlistName) async {

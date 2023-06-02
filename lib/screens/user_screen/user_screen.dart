@@ -1,5 +1,5 @@
 import 'package:black_beatz/main.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/common_widgets/welcomescreen_2.dart';
 import 'package:black_beatz/screens/favourite_screens/favourite.dart';
 import 'package:black_beatz/screens/mostly_played/mostly_played.dart';

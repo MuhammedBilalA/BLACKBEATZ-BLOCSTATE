@@ -1,5 +1,5 @@
 import 'package:black_beatz/database/playlist/playlist_function/playlist_function.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/playlist_screens/playlist_class.dart';
 import 'package:black_beatz/screens/playlist_screens/playlist_unique_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,8 @@ class PlaylistScreen extends StatefulWidget {
 
 // ----playlistBodyNotifier for rebuilding the playlist body
 ValueNotifier playlistBodyNotifier = ValueNotifier([]);
+
+
 // ----playlistNotifier for  creating playlist objects and its contain the playlist name and container
 ValueNotifier<List<EachPlaylist>> playListNotifier = ValueNotifier([]);
 

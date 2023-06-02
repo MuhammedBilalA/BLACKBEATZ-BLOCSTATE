@@ -1,7 +1,7 @@
 import 'package:black_beatz/database/favorite/fav_db_function/fav_functions.dart';
 import 'package:black_beatz/database/songs/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/screens/all_songs/all_songs.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/common_widgets/snackbar.dart';
 import 'package:black_beatz/screens/favourite_screens/favourite.dart';
 import 'package:black_beatz/screens/home_screens/home_screen.dart';

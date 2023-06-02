@@ -1,7 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:black_beatz/database/mostlyplayed/mostlyplayed.dart';
 import 'package:black_beatz/database/songs/songs_db_model/songs_db_model.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/playing_screen/play_screen.dart';
 import 'package:black_beatz/screens/playing_screen/player_functions.dart';
 import 'package:flutter/material.dart';

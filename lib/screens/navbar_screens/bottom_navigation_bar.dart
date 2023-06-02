@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:black_beatz/database/songs/songs_db_functions/songs_db_functions.dart';
 import 'package:black_beatz/screens/all_songs/all_songs.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/home_screens/home_screen.dart';
 import 'package:black_beatz/screens/navbar_screens/privacy_policy_screen.dart';
 import 'package:black_beatz/screens/navbar_screens/terms_and_conditions_screen.dart';

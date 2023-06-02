@@ -1,5 +1,5 @@
 import 'package:black_beatz/database/playlist/playlist_function/playlist_function.dart';
-import 'package:black_beatz/screens/common_widgets/colors.dart';
+import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/screens/common_widgets/hearticon.dart';
 import 'package:black_beatz/screens/common_widgets/listtilecustom.dart';
 import 'package:black_beatz/screens/common_widgets/splash_screen.dart';
