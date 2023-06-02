@@ -1,11 +1,12 @@
-import 'package:black_beatz/database/favorite/dbmodel/fav_model.dart';
-import 'package:black_beatz/database/playlist/playlist_model/playlist_model.dart';
-import 'package:black_beatz/database/songs/songs_db_model/songs_db_model.dart';
+import 'package:black_beatz/domain/playlist_model/playlist_model.dart';
+
+import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
-import 'package:black_beatz/screens/common_widgets/splash_screen.dart';
+import 'package:black_beatz/core/widgets/splash_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:flutter/material.dart';
+import 'package:black_beatz/domain/fav_db_model/fav_model.dart';
 
 const saveKeyName = 'UserLoggedIn';
 
