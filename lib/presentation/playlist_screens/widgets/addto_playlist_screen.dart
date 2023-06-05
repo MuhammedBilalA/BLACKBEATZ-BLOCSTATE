@@ -141,7 +141,7 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
               ],
             ),
           ),
-          (playListNotifier.value.isEmpty)
+          (playListNotifier.isEmpty)
               ? const Expanded(
                   child: Center(
                     child: Text(
@@ -192,7 +192,7 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
                     if (value == null || value.isEmpty) {
                       return 'name is requiered';
                     } else {
-                      for (var element in playListNotifier.value) {
+                      for (var element in playListNotifier) {
                         if (element.name == playlistControllor.text) {
                           return 'name is alredy exist';
                         }
@@ -276,7 +276,7 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
   }
 
   searchPlaylist(String searchtext) {
-    playlistSearchNotifier.value = playListNotifier.value
+    playlistSearchNotifier.value = playListNotifier
         .where(
             (element) => element.name.contains(searchtext.toLowerCase().trim()))
         .toList();
@@ -294,28 +294,28 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
               Matrix4.translationValues(startAnimation ? 0 : screenWidth, 0, 0),
           child: InkWell(
             onTap: () {
-              if (playListNotifier.value[index].container
+              if (playListNotifier[index]
+                  .container
                   .contains(widget.addToPlaylistSong)) {
                 snackbarRemoving(
                     text: 'song is alredy exist', context: context);
               } else {
-                playListNotifier.value[index].container
-                    .add(widget.addToPlaylistSong);
-                playlistAddDB(widget.addToPlaylistSong,
-                    playListNotifier.value[index].name);
+                playListNotifier[index].container.add(widget.addToPlaylistSong);
+                playlistAddDB(
+                    widget.addToPlaylistSong, playListNotifier[index].name);
 
                 snackbarAdding(
-                    text: 'song added to ${playListNotifier.value[index].name}',
+                    text: 'song added to ${playListNotifier[index].name}',
                     context: context);
               }
 
               Timer(const Duration(milliseconds: 900), () {
-                playlistBodyNotifier.notifyListeners();
+                // playlistBodyNotifier.notifyListeners();
                 Navigator.of(context).pop();
               });
             },
             child: PlaylistSearchTile(
-              title: playListNotifier.value[index].name,
+              title: playListNotifier[index].name,
               context: context,
               index: index,
             ),
@@ -325,7 +325,7 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
       separatorBuilder: (context, index) {
         return const SizedBox();
       },
-      itemCount: playListNotifier.value.length,
+      itemCount: playListNotifier.length,
     );
   }
 

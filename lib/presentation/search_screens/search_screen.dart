@@ -182,7 +182,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               trailing1: Hearticon(
                 currentSong: allSongs[index],
-                isfav: favoritelist.value.contains(allSongs[index]),
+                isfav: favoritelist.contains(allSongs[index]),
               ),
               trailing2: PopupMenuButton(
                   shape: RoundedRectangleBorder(
@@ -296,7 +296,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             trailing1: Hearticon(
               currentSong: data.value[index],
-              isfav: favoritelist.value.contains(data.value[index]),
+              isfav: favoritelist.contains(data.value[index]),
             ),
             trailing2: PopupMenuButton(
                 shape: RoundedRectangleBorder(

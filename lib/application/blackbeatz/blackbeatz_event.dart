@@ -14,3 +14,13 @@ class GetRecent extends BlackBeatzEvent {
   List<Songs> recentList;
   GetRecent({required this.recentList});
 }
+
+class GetPlaylist extends BlackBeatzEvent {
+  List<EachPlaylist> playlist;
+  GetPlaylist({required this.playlist});
+}
+
+class GetPlusIcon extends BlackBeatzEvent {
+  bool plusIcon;
+  GetPlusIcon({required this.plusIcon});
+}

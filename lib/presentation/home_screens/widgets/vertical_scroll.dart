@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/recent_functions/recent_functions.dart';
@@ -33,6 +35,7 @@ class _VerticalScrollState extends State<VerticalScroll> {
     screenWidth = MediaQuery.of(context).size.width;
     return BlocBuilder<AnimationBloc, AnimationState>(
       builder: (context, stateanimation) {
+        
         return SingleChildScrollView(
           child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,

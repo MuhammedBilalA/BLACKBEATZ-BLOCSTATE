@@ -94,7 +94,7 @@ class MostlyPlayed extends StatelessWidget {
                       trailing1: Hearticon(
                         currentSong: mostPlayedList[index],
                         isfav:
-                            favoritelist.value.contains(mostPlayedList[index]),
+                            favoritelist.contains(mostPlayedList[index]),
                       ),
                       trailing2: PopupMenuButton(
                           shape: RoundedRectangleBorder(

@@ -112,8 +112,8 @@ class Fetching {
       int count = 0;
       for (var songs in allSongs) {
         if (favs.id == songs.id) {
-          log(favoritelist.value.length.toString());
-          favoritelist.value.insert(0, songs);
+          log(favoritelist.length.toString());
+          favoritelist.insert(0, songs);
           continue;
         } else {
           count++;
@@ -125,7 +125,7 @@ class Fetching {
       }
     }
     List<Songs> favlist = [];
-    favlist.addAll(favoritelist.value);
+    favlist.addAll(favoritelist);
 
     return favlist;
   }
@@ -164,10 +164,10 @@ class Fetching {
           }
         }
       }
-      playListNotifier.value.insert(0, playlistFetch);
+      playListNotifier.insert(0, playlistFetch);
     }
     List<EachPlaylist> eachPlaylistList = [];
-    eachPlaylistList.addAll(playListNotifier.value);
+    eachPlaylistList.addAll(playListNotifier);
     return eachPlaylistList;
   }
 
@@ -242,14 +242,14 @@ class Fetching {
     await songdb.addAll(allSongs);
     // -------------------------fav fetching------------------
     List<Favmodel> favSongCheck = [];
-    favoritelist.value.clear();
+    favoritelist.clear();
     Box<Favmodel> favdb = await Hive.openBox('favorite');
     favSongCheck.addAll(favdb.values);
     for (var favs in favSongCheck) {
       int count = 0;
       for (var songs in allSongs) {
         if (favs.id == songs.id) {
-          favoritelist.value.insert(0, songs);
+          favoritelist.insert(0, songs);
           continue;
         } else {
           count++;
@@ -317,7 +317,7 @@ class Fetching {
     }
 
     // ------------playlist refresh starting------------------------
-    playListNotifier.value.clear();
+    playListNotifier.clear();
 
     Box<PlaylistClass> playlistdb = await Hive.openBox('playlist');
 
@@ -334,14 +334,12 @@ class Fetching {
           }
         }
       }
-      playListNotifier.value.insert(0, playlistFetch);
+      playListNotifier.insert(0, playlistFetch);
     }
 
     // -------------------------------------------------------------
 
-    plusiconNotifier.notifyListeners();
-    playlistBodyNotifier.notifyListeners();
+    // playlistBodyNotifier.notifyListeners();
     allsongBodyNotifier.notifyListeners();
-  
   }
 }

@@ -1,3 +1,4 @@
+import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/playlist_functions/playlist_function.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
@@ -9,90 +10,82 @@ import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/playe
 import 'package:black_beatz/presentation/playlist_screens/widgets/addto_playlist_screen.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_class.dart';
 
-import 'package:black_beatz/presentation/playlist_screens/playlist_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-class PlaylistUniqueScreen extends StatefulWidget {
+class PlaylistUniqueScreen extends StatelessWidget {
   final EachPlaylist playlist;
 
   const PlaylistUniqueScreen({super.key, required this.playlist});
 
   @override
-  State<PlaylistUniqueScreen> createState() => _PlaylistUniqueScreenState();
-}
-
-ValueNotifier plusiconNotifier = ValueNotifier([]);
-
-class _PlaylistUniqueScreenState extends State<PlaylistUniqueScreen> {
-  @override
   Widget build(BuildContext context) {
     GlobalKey<ScaffoldState> scaffoldkey = GlobalKey();
-    return Scaffold(
-      key: scaffoldkey,
-      body: Scaffold(
-          backgroundColor: backgroundColorLight,
-          appBar: AppBar(
+    return BlocBuilder<BlackBeatzBloc, BlackBeatzState>(
+      builder: (context, state) {
+        return Scaffold(
+          key: scaffoldkey,
+          body: Scaffold(
             backgroundColor: backgroundColorLight,
-            title: Text(
-              widget.playlist.name.toUpperCase(),
-              style: const TextStyle(
-                  height: 3,
-                  fontFamily: 'Peddana',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 25),
-            ),
-            automaticallyImplyLeading: false,
-            leading: InkWell(
-                onTap: () {
-                  playlistBodyNotifier.notifyListeners();
-                  Navigator.of(context).pop();
-                },
-                child: const Center(
-                    child: FaIcon(
-                  FontAwesomeIcons.angleLeft,
-                ))),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: IconButton(
-                    onPressed: () {
-                      scaffoldkey.currentState?.showBottomSheet(
-                          backgroundColor: transparentColor,
-                          (context) => Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.55,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(18),
-                                    topRight: Radius.circular(18),
+            appBar: AppBar(
+              backgroundColor: backgroundColorLight,
+              title: Text(
+                playlist.name.toUpperCase(),
+                style: const TextStyle(
+                    height: 3,
+                    fontFamily: 'Peddana',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 25),
+              ),
+              automaticallyImplyLeading: false,
+              leading: InkWell(
+                  onTap: () {
+                    // playlistBodyNotifier.notifyListeners();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Center(
+                      child: FaIcon(
+                    FontAwesomeIcons.angleLeft,
+                  ))),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: IconButton(
+                      onPressed: () {
+                        scaffoldkey.currentState?.showBottomSheet(
+                            backgroundColor: transparentColor,
+                            (context) => Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.55,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(18),
+                                      topRight: Radius.circular(18),
+                                    ),
+                                    color: backgroundColorDark,
                                   ),
-                                  color: backgroundColorDark,
-                                ),
-                                child: ListView.separated(
-                                    itemBuilder: (context, index) {
-                                      return listTileMethod(context, index);
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return const SizedBox(
-                                        height: 5,
-                                      );
-                                    },
-                                    itemCount: allSongs.length),
-                              ));
-                    },
-                    icon: const FaIcon(
-                      FontAwesomeIcons.plus,
-                      size: 26,
-                    )),
-              )
-            ],
-          ),
-          body: ValueListenableBuilder(
-            valueListenable: plusiconNotifier,
-            builder: (context, value, child) => (widget
-                    .playlist.container.isNotEmpty)
+                                  child: ListView.separated(
+                                      itemBuilder: (context, index) {
+                                        return listTileMethod(context, index);
+                                      },
+                                      separatorBuilder: (context, index) {
+                                        return const SizedBox(
+                                          height: 5,
+                                        );
+                                      },
+                                      itemCount: allSongs.length),
+                                ));
+                      },
+                      icon: const FaIcon(
+                        FontAwesomeIcons.plus,
+                        size: 26,
+                      )),
+                )
+              ],
+            ),
+            body: (playlist.container.isNotEmpty)
                 ? ListView.separated(
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
@@ -101,7 +94,7 @@ class _PlaylistUniqueScreenState extends State<PlaylistUniqueScreen> {
                             const EdgeInsets.only(left: 15, right: 15, top: 20),
                         child: InkWell(
                             onTap: () {
-                              playingAudio(widget.playlist.container, index);
+                              playingAudio(playlist.container, index);
 
                               showBottomSheet(
                                   backgroundColor: transparentColor,
@@ -112,28 +105,30 @@ class _PlaylistUniqueScreenState extends State<PlaylistUniqueScreen> {
                                     return const MiniPlayer();
                                   });
                             },
-                            child: listtileCalling(index, context)),
+                            child: listtileCalling(index, context, state)),
                       );
                     },
                     separatorBuilder: (context, index) {
                       return const SizedBox();
                     },
-                    itemCount: widget.playlist.container.length,
+                    itemCount: playlist.container.length,
                   )
                 : Center(
                     child: Text(
-                      "ADD SOME SONGS TO ${widget.playlist.name.toUpperCase()}",
+                      "ADD SOME SONGS TO ${playlist.name.toUpperCase()}",
                       style: const TextStyle(
                           color: whiteColor,
                           fontFamily: 'Peddana',
                           fontSize: 18),
                     ),
                   ),
-          )),
+          ),
+        );
+      },
     );
   }
 
-  ListtileCustomWidget listtileCalling(int index, BuildContext context) {
+  ListtileCustomWidget listtileCalling(int index, BuildContext context, state) {
     return ListtileCustomWidget(
       index: index,
       context: context,
@@ -143,7 +138,7 @@ class _PlaylistUniqueScreenState extends State<PlaylistUniqueScreen> {
         artworkQuality: FilterQuality.high,
         artworkBorder: BorderRadius.circular(10),
         artworkFit: BoxFit.cover,
-        id: widget.playlist.container[index].id!,
+        id: playlist.container[index].id!,
         type: ArtworkType.AUDIO,
         nullArtworkWidget: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -154,32 +149,31 @@ class _PlaylistUniqueScreenState extends State<PlaylistUniqueScreen> {
         ),
       ),
       title: Text(
-        '${widget.playlist.container[index].songName}',
+        '${playlist.container[index].songName}',
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontWeight: FontWeight.bold, color: whiteColor),
       ),
       subtitle: Text(
-        "${widget.playlist.container[index].artist}",
+        "${playlist.container[index].artist}",
         style: const TextStyle(color: whiteColor),
       ),
       trailing1: Hearticon(
-        currentSong: widget.playlist.container[index],
-        isfav: favoritelist.value.contains(widget.playlist.container[index]),
+        currentSong: playlist.container[index],
+        isfav: state.favoritelist.contains(playlist.container[index]),
       ),
       trailing2: PopupMenuButton(
           onSelected: (value) {
             if (value == 0) {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (ctx) => AddToPlaylist(
-                      addToPlaylistSong: widget.playlist.container[index])));
+                      addToPlaylistSong: playlist.container[index])));
             } else {
               // removing from database
-              playlistRemoveDB(
-                  widget.playlist.container[index], widget.playlist.name);
-              setState(() {
-                //removing from playlist list only for view
-                widget.playlist.container.removeAt(index);
-              });
+              playlistRemoveDB(playlist.container[index], playlist.name);
+              // setState(() {
+              //removing from playlist list only for view
+              playlist.container.removeAt(index);
+              // });
             }
           },
           shape:
@@ -260,78 +254,77 @@ class _PlaylistUniqueScreenState extends State<PlaylistUniqueScreen> {
             fontWeight: FontWeight.w400),
       ),
       trailing: PlusIcon(
-        playlist: widget.playlist,
+        playlist: playlist,
         context: context,
         index: index,
-        playlistName: widget.playlist.name,
+        playlistName: playlist.name,
       ),
     );
   }
 }
 
-class PlusIcon extends StatefulWidget {
+// ValueNotifier plusiconNotifier = ValueNotifier([]);
+
+class PlusIcon extends StatelessWidget {
   final String playlistName;
   final EachPlaylist playlist;
   final int index;
   final BuildContext context;
-  const PlusIcon(
+  PlusIcon(
       {super.key,
       required this.playlistName,
       required this.playlist,
       required this.index,
       required this.context});
 
-  @override
-  State<PlusIcon> createState() => _PlusIconState();
-}
-
-class _PlusIconState extends State<PlusIcon> {
   bool plus = true;
 
   // checking the song is alredy in that playlist
-
-  @override
-  void initState() {
-    if (widget.playlist.container.contains(allSongs[widget.index])) {
-      plus = false;
-    } else {
-      plus = true;
-    }
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          if (plus == true) {
-            plus = false;
-            //adding to playlist
+    if (playlist.container.contains(allSongs[index])) {
+      // context.read<BlackBeatzBloc>().add(GetPlusIcon(plusIcon: false));
 
-            widget.playlist.container.insert(0, allSongs[widget.index]);
-            playlistAddDB(allSongs[widget.index], widget.playlist.name);
+      plus = false;
+    } else {
+      // context.read<BlackBeatzBloc>().add(GetPlusIcon(plusIcon: true));
 
-            plusiconNotifier.notifyListeners();
-            // Navigator.pop(context);
-          } else {
-            plus = true;
+      plus = true;
+    }
+    return BlocBuilder<BlackBeatzBloc, BlackBeatzState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () {
+            if (plus == true) {
+              context.read<BlackBeatzBloc>().add(GetPlusIcon(plusIcon: false));
+              plus = false;
+              //adding to playlist
 
-            widget.playlist.container.remove(allSongs[widget.index]);
-            playlistRemoveDB(allSongs[widget.index], widget.playlistName);
-            plusiconNotifier.notifyListeners();
-          }
-        });
+              playlist.container.insert(0, allSongs[index]);
+              playlistAddDB(allSongs[index], playlist.name);
+
+              // plusiconNotifier.notifyListeners();
+              // Navigator.pop(context);
+            } else {
+              plus = true;
+              context.read<BlackBeatzBloc>().add(GetPlusIcon(plusIcon: true));
+
+              playlist.container.remove(allSongs[index]);
+              playlistRemoveDB(allSongs[index], playlistName);
+              // plusiconNotifier.notifyListeners();
+            }
+          },
+          child: (plus)
+              ? const Icon(
+                  Icons.add,
+                  color: Colors.green,
+                )
+              : const Icon(
+                  Icons.remove_circle_outline_outlined,
+                  color: redColor,
+                ),
+        );
       },
-      child: (plus)
-          ? const Icon(
-              Icons.add,
-              color: Colors.green,
-            )
-          : const Icon(
-              Icons.remove_circle_outline_outlined,
-              color: redColor,
-            ),
     );
   }
 }

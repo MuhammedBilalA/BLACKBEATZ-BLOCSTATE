@@ -1,13 +1,16 @@
+import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/playlist_functions/playlist_function.dart';
 import 'package:black_beatz/core/colors/colors.dart';
+import 'package:black_beatz/main.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_class.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_unique_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PlaylistScreen extends StatelessWidget {
-   PlaylistScreen({super.key});
+  PlaylistScreen({super.key});
 
   double screenWidth = 0;
 
@@ -15,48 +18,48 @@ class PlaylistScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: backgroundColorLight,
-      appBar: AppBar(
         backgroundColor: backgroundColorLight,
-        title: const Text(
-          'PLAYLIST',
-          style: TextStyle(
-              height: 3,
-              fontFamily: 'Peddana',
-              fontWeight: FontWeight.w600,
-              fontSize: 25),
+        appBar: AppBar(
+          backgroundColor: backgroundColorLight,
+          title: const Text(
+            'PLAYLIST',
+            style: TextStyle(
+                height: 3,
+                fontFamily: 'Peddana',
+                fontWeight: FontWeight.w600,
+                fontSize: 25),
+          ),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          leading: InkWell(
+              onTap: () => Navigator.of(context).pop(),
+              child: const Center(
+                  child: FaIcon(
+                FontAwesomeIcons.angleLeft,
+              ))),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                  onPressed: () {
+                    createNewPlaylist(context);
+                  },
+                  icon: const FaIcon(
+                    FontAwesomeIcons.plus,
+                    size: 26,
+                  )),
+            )
+          ],
         ),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        leading: InkWell(
-            onTap: () => Navigator.of(context).pop(),
-            child: const Center(
-                child: FaIcon(
-              FontAwesomeIcons.angleLeft,
-            ))),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: IconButton(
-                onPressed: () {
-                  createNewPlaylist(context);
-                },
-                icon: const FaIcon(
-                  FontAwesomeIcons.plus,
-                  size: 26,
-                )),
-          )
-        ],
-      ),
 
-      // --------------------------------Body Starting------------------------
-      body: ValueListenableBuilder(
-        valueListenable: playlistBodyNotifier,
-        builder: (context, value, child) => (playListNotifier.value.isEmpty)
-            ? emptyPlaylist()
-            : gridViewBuilderBody(),
-      ),
-    );
+        // --------------------------------Body Starting------------------------
+        body: BlocBuilder<BlackBeatzBloc, BlackBeatzState>(
+          builder: (context, state) {
+            return (state.playList.isEmpty)
+                ? emptyPlaylist()
+                : gridViewBuilderBody(state);
+          },
+        ));
   }
 
   Center emptyPlaylist() {
@@ -71,13 +74,11 @@ class PlaylistScreen extends StatelessWidget {
     );
   }
 
-  ValueListenableBuilder<dynamic> gridViewBuilderBody() {
-    return ValueListenableBuilder(
-      valueListenable: playlistBodyNotifier,
-      builder: (context, value, child) => Padding(
+  gridViewBuilderBody(state) {
+    return Padding(
         padding: const EdgeInsets.all(10.0),
         child: GridView.builder(
-          itemCount: playListNotifier.value.length,
+          itemCount: state.playList.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
           itemBuilder: (context, index) {
@@ -85,7 +86,7 @@ class PlaylistScreen extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (ctx) => PlaylistUniqueScreen(
-                          playlist: playListNotifier.value[index],
+                          playlist: state.playList[index],
                         )));
               },
               child: Stack(
@@ -112,7 +113,7 @@ class PlaylistScreen extends StatelessWidget {
                             if (value == 0) {
                               renamefunction(context, index);
                             } else {
-                              deleteplaylistfunction(index,context);
+                              deleteplaylistfunction(index, context);
                             }
                           },
                           shape: RoundedRectangleBorder(
@@ -187,7 +188,7 @@ class PlaylistScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 18.0, top: 8),
                         child: Text(
-                          playListNotifier.value[index].name,
+                          state.playList[index].name,
                           style: const TextStyle(
                               height: 1,
                               color: whiteColor,
@@ -202,9 +203,7 @@ class PlaylistScreen extends StatelessWidget {
               ),
             );
           },
-        ),
-      ),
-    );
+        ));
   }
 
   Future<dynamic> createNewPlaylist(BuildContext context) {
@@ -227,7 +226,7 @@ class PlaylistScreen extends StatelessWidget {
                     if (value == null || value.isEmpty) {
                       return 'name is requiered';
                     } else {
-                      for (var element in playListNotifier.value) {
+                      for (var element in playListNotifier) {
                         if (element.name == playlistControllor.text) {
                           return 'name is alredy exist';
                         }
@@ -253,7 +252,6 @@ class PlaylistScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                      
                         playlistControllor.text = '';
                         Navigator.of(context).pop();
                       },
@@ -269,11 +267,14 @@ class PlaylistScreen extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (playlistFormkey.currentState!.validate()) {
-                        playlistCreating(playlistControllor.text);
+                        List<EachPlaylist> playlistCreatingList =
+                            await playlistCreating(playlistControllor.text);
+                        context
+                            .read<BlackBeatzBloc>()
+                            .add(GetPlaylist(playlist: playlistCreatingList));
 
-                   
                         playlistControllor.text = '';
                         Navigator.of(ctx).pop();
                       }
@@ -295,10 +296,10 @@ class PlaylistScreen extends StatelessWidget {
         });
   }
 
-  deleteplaylistfunction(int index,BuildContext context) {
+  deleteplaylistfunction(int index, BuildContext context) {
     showDialog(
         context: context,
-        builder: (ctx) {
+        builder: (context) {
           return AlertDialog(
             backgroundColor: alertDialogBackgroundColor,
             title: const Text(
@@ -327,13 +328,15 @@ class PlaylistScreen extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                     
-                        playlistdelete(index);
-                        Navigator.of(ctx).pop();
+                    onPressed: () async {
+                      List<EachPlaylist> playlistr =
+                          await playlistdelete(index);
+                      context
+                          .read<BlackBeatzBloc>()
+                          .add(GetPlaylist(playlist: playlistr));
+                      Navigator.of(context).pop();
 
-                        playlistBodyNotifier.notifyListeners();
-                      
+                      // playlistBodyNotifier.notifyListeners();
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -356,7 +359,7 @@ class PlaylistScreen extends StatelessWidget {
   renamefunction(BuildContext context, int index) {
     TextEditingController rename = TextEditingController();
 
-    rename.text = playListNotifier.value[index].name;
+    rename.text = playListNotifier[index].name;
     showDialog(
         context: context,
         builder: (ctx) {
@@ -376,7 +379,7 @@ class PlaylistScreen extends StatelessWidget {
                     if (value == null || value.isEmpty) {
                       return 'name is requiered';
                     } else {
-                      for (var element in playListNotifier.value) {
+                      for (var element in playListNotifier) {
                         if (element.name == rename.text) {
                           return 'name is alredy exist';
                         }
@@ -402,7 +405,6 @@ class PlaylistScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        
                         playlistControllor.text = '';
                         Navigator.of(context).pop();
                       },
@@ -420,11 +422,10 @@ class PlaylistScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       if (playlistFormkey.currentState!.validate()) {
-                     
-                          // ---renaming the playlist
+                        // ---renaming the playlist
 
-                          playlistrename(index, rename.text);
-                        
+                        playlistrename(index, rename.text);
+
                         playlistControllor.text = '';
                         Navigator.of(ctx).pop();
                       }
@@ -448,10 +449,10 @@ class PlaylistScreen extends StatelessWidget {
 }
 
 // ----playlistBodyNotifier for rebuilding the playlist body
-ValueNotifier playlistBodyNotifier = ValueNotifier([]);
+// ValueNotifier playlistBodyNotifier = ValueNotifier([]);
 
 // ----playlistNotifier for  creating playlist objects and its contain the playlist name and container
-ValueNotifier<List<EachPlaylist>> playListNotifier = ValueNotifier([]);
+List<EachPlaylist> playListNotifier = [];
 
 final playlistFormkey = GlobalKey<FormState>();
 TextEditingController playlistControllor = TextEditingController();

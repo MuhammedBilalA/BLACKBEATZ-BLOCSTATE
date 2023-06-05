@@ -112,7 +112,7 @@ class _AllSongsState extends State<AllSongs> {
                     ),
                     trailing1: Hearticon(
                       currentSong: state.allSongs[index],
-                      isfav: favoritelist.value.contains(allSongs[index]),
+                      isfav: state.favoritelist.contains(allSongs[index]),
                     ),
                     trailing2: PopupMenuButton(
                         shape: RoundedRectangleBorder(

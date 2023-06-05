@@ -346,7 +346,7 @@ class _PlayScreenState extends State<PlayScreen> {
                       ),
                       Hearticon(
                         currentSong: currentlyplaying!,
-                        isfav: favoritelist.value.contains(currentlyplaying),
+                        isfav: favoritelist.contains(currentlyplaying),
                         refresh: true,
                       ),
                       const Spacer(

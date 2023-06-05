@@ -30,6 +30,7 @@ class BlackBeatzBloc extends Bloc<BlackBeatzEvent, BlackBeatzState> {
           favoritelist: favoritelist,
           mostPlayedList: mostPlayedList,
           playList: playList,
+          plusIcon: state.plusIcon,
           recentList: recentList));
     });
     on<GetFavorite>(
@@ -54,6 +55,7 @@ class BlackBeatzBloc extends Bloc<BlackBeatzEvent, BlackBeatzState> {
             favoritelist: event.favoriteList,
             mostPlayedList: state.mostPlayedList,
             playList: state.playList,
+            plusIcon: state.plusIcon,
             recentList: state.recentList));
       },
     );
@@ -71,7 +73,7 @@ class BlackBeatzBloc extends Bloc<BlackBeatzEvent, BlackBeatzState> {
         // // log('ith recent ${recentList.length.toString()}');
         // List<Songs> mostPlayedList = await fetching.mostplayedfetch();
         // List<EachPlaylist> playList = await fetching.playlistfetching();
-           log('GetRecent state.allsongs:----${state.allSongs.length}');
+        log('GetRecent state.allsongs:----${state.allSongs.length}');
         log('GetRecent event.favoriteList:----${state.favoritelist.length}');
         log('GetRecent state.mostPlayedList:----${state.mostPlayedList.length}');
         log('GetRecent state.playList:----${state.playList.length}');
@@ -82,8 +84,33 @@ class BlackBeatzBloc extends Bloc<BlackBeatzEvent, BlackBeatzState> {
             favoritelist: state.favoritelist,
             mostPlayedList: state.mostPlayedList,
             playList: state.playList,
+            plusIcon: state.plusIcon,
             recentList: event.recentList));
       },
     );
+
+    on<GetPlaylist>(
+      (event, emit) {
+        log('this is playlist ${event.playlist.length}');
+        return emit(BlackBeatzState(
+          
+          plusIcon: state.plusIcon,
+            allSongs: state.allSongs,
+            favoritelist: state.favoritelist,
+            mostPlayedList: state.mostPlayedList,
+            playList: event.playlist,
+            recentList: state.recentList));
+      },
+    );
+    on<GetPlusIcon>((event, emit) {
+ return emit(BlackBeatzState(
+            allSongs: state.allSongs,
+            favoritelist: state.favoritelist,
+            mostPlayedList: state.mostPlayedList,
+            playList: state.playList,
+            recentList: state.recentList,plusIcon: event.plusIcon));
+
+
+    });
   }
 }

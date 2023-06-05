@@ -6,10 +6,22 @@ class BlackBeatzState {
   List<Songs> mostPlayedList;
   List<Songs> recentList;
   List<EachPlaylist> playList;
+  bool plusIcon;
 
-  BlackBeatzState({required this.allSongs,required this.favoritelist,required this.mostPlayedList,required this.playList,required this.recentList});
+  BlackBeatzState(
+      {required this.allSongs,
+      required this.favoritelist,
+      required this.mostPlayedList,
+      required this.playList,
+      required this.recentList,required this.plusIcon});
 }
 
 class BlackBeatzInitial extends BlackBeatzState {
-  BlackBeatzInitial() : super(allSongs: [],favoritelist: [],mostPlayedList: [],playList: [],recentList: []);
+  BlackBeatzInitial()
+      : super(
+            allSongs: [],
+            favoritelist: [],
+            mostPlayedList: [],
+            playList: [],
+            recentList: [],plusIcon: true);
 }

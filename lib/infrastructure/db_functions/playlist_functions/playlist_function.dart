@@ -2,14 +2,17 @@ import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 
 import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_class.dart';
 import 'package:black_beatz/presentation/playlist_screens/playlist_screen.dart';
-import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_unique_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:black_beatz/domain/playlist_model/playlist_model.dart';
 
-Future playlistCreating(playlistName) async {
-  playListNotifier.value.insert(0, EachPlaylist(name: playlistName));
+Future<List<EachPlaylist>> playlistCreating(playlistName) async {
+  playListNotifier.insert(0, EachPlaylist(name: playlistName));
   Box<PlaylistClass> playlistdb = await Hive.openBox('playlist');
   playlistdb.add(PlaylistClass(playlistName: playlistName));
+
+  List<EachPlaylist> playlistReturn = [];
+  playlistReturn.addAll(playListNotifier);
+  return playlistReturn;
 }
 
 Future playlistAddDB(Songs addingSong, String playlistName) async {
@@ -26,7 +29,6 @@ Future playlistAddDB(Songs addingSong, String playlistName) async {
       break;
     }
   }
-  plusiconNotifier.notifyListeners();
 }
 
 Future playlistRemoveDB(Songs removingSong, String playlistName) async {
@@ -47,8 +49,8 @@ Future playlistRemoveDB(Songs removingSong, String playlistName) async {
   }
 }
 
-Future playlistdelete(int index) async {
-  String playlistname = playListNotifier.value[index].name;
+Future<List<EachPlaylist>> playlistdelete(int index) async {
+  String playlistname = playListNotifier[index].name;
   Box<PlaylistClass> playlistdb = await Hive.openBox('playlist');
   for (PlaylistClass element in playlistdb.values) {
     if (element.playlistName == playlistname) {
@@ -57,13 +59,19 @@ Future playlistdelete(int index) async {
       break;
     }
   }
-  playListNotifier.value.removeAt(index);
-  playListNotifier.notifyListeners();
-  playlistBodyNotifier.notifyListeners();
+  playListNotifier.removeAt(index);
+ 
+
+  List<EachPlaylist> playlistr = [];
+
+  playlistr.addAll(playListNotifier);
+  return playlistr;
+
+  // playlistBodyNotifier.notifyListeners();
 }
 
 Future playlistrename(int index, String newname) async {
-  String playlistname = playListNotifier.value[index].name;
+  String playlistname = playListNotifier[index].name;
   Box<PlaylistClass> playlistdb = await Hive.openBox('playlist');
   for (PlaylistClass element in playlistdb.values) {
     if (element.playlistName == playlistname) {
@@ -72,7 +80,7 @@ Future playlistrename(int index, String newname) async {
       playlistdb.put(key, element);
     }
   }
-  playListNotifier.value[index].name = newname;
-  playListNotifier.notifyListeners();
-  playlistBodyNotifier.notifyListeners();
+  playListNotifier[index].name = newname;
+
+  // playlistBodyNotifier.notifyListeners();
 }
