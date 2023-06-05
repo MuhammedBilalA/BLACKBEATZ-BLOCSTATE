@@ -1,18 +1,23 @@
+
+
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 
 import 'package:black_beatz/domain/fav_db_model/fav_model.dart';
 import 'package:black_beatz/presentation/favourite_screens/favourite.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-addFavourite(Songs song) async {
+Future <List<Songs>> addFavourite(Songs song) async {
   favoritelist.value.insert(0, song);
   Box<Favmodel> favdb = await Hive.openBox('favorite');
   Favmodel temp = Favmodel(id: song.id);
   favdb.add(temp);
-  
+
+  List<Songs> addedlist = [];
+  addedlist.addAll(favoritelist.value);
+  return addedlist;
 }
 
-removeFavourite(Songs song) async {
+Future <List<Songs>>removeFavourite(Songs song) async {
   favoritelist.value.remove(song);
   List<Favmodel> templist = [];
   Box<Favmodel> favdb = await Hive.openBox('favorite');
@@ -24,4 +29,7 @@ removeFavourite(Songs song) async {
       break;
     }
   }
+    List<Songs> addedlist = [];
+  addedlist.addAll(favoritelist.value);
+  return addedlist;
 }

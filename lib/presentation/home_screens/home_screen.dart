@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: backgroundColorDark,
         body: ValueListenableBuilder(
           valueListenable: homeScreenNotifier,
-          builder: (context, value, child) => const SingleChildScrollView(
+          builder: (context, value, child) =>  SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

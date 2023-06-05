@@ -1,9 +1,11 @@
+import 'package:black_beatz/application/animation/animation_bloc.dart';
+import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/domain/playlist_model/playlist_model.dart';
-
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
-import 'package:black_beatz/core/widgets/splash_screen.dart';
+import 'package:black_beatz/presentation/welcome_screens/splash_screen.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:flutter/material.dart';
 import 'package:black_beatz/domain/fav_db_model/fav_model.dart';
@@ -34,10 +36,20 @@ class BlackBeatz extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    return MaterialApp(
-      theme: ThemeData(primarySwatch: blueColor),
-      debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AnimationBloc(),
+        ),
+        BlocProvider(
+          create: (context) => BlackBeatzBloc(),
+        ),
+      ],
+      child:  MaterialApp(
+        theme: ThemeData(primarySwatch: blueColor),
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+      ),
     );
   }
 }

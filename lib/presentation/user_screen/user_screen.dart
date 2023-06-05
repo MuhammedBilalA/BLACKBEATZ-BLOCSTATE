@@ -99,7 +99,7 @@ class _UserScreenState extends State<UserScreen> {
               child: InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (ctx) => const FavouriteScreen()));
+                      builder: (ctx) =>  FavouriteScreen()));
                 },
                 child: UserWidgets(
                     image: 'assets/images/oris.png',
@@ -115,7 +115,7 @@ class _UserScreenState extends State<UserScreen> {
             InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => const PlaylistScreen()));
+                    builder: (ctx) =>  PlaylistScreen()));
               },
               child: UserWidgets(
                   image: 'assets/images/marshmelllow1.jpg',

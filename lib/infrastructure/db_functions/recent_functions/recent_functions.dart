@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 recentremove(Songs song) async {
   Box<int> recentDb = await Hive.openBox('recent');
-  recentListNotifier.value.remove(song);
+  recentList.remove(song);
   // recentDb.delete(song.id);
   List<int> temp = [];
   temp.addAll(recentDb.values);
@@ -14,15 +14,20 @@ recentremove(Songs song) async {
       recentDb.deleteAt(i);
     }
   }
+
+   List<Songs> recent = [];
+  recent.addAll(recentList);
+
+  return recent;
 }
 
-recentadd(Songs song) async {
+Future<List<Songs>> recentadd(Songs song) async {
   Box<int> recentDb = await Hive.openBox('recent');
   List<int> temp = [];
   temp.addAll(recentDb.values);
-  if (recentListNotifier.value.contains(song)) {
-    recentListNotifier.value.remove(song);
-    recentListNotifier.value.insert(0, song);
+  if (recentList.contains(song)) {
+    recentList.remove(song);
+    recentList.insert(0, song);
     for (int i = 0; i < temp.length; i++) {
       if (song.id == temp[i]) {
         recentDb.deleteAt(i);
@@ -30,12 +35,16 @@ recentadd(Songs song) async {
       }
     }
   } else {
-    recentListNotifier.value.insert(0, song);
+    recentList.insert(0, song);
     recentDb.add(song.id!);
   }
-  if (recentListNotifier.value.length > 10) {
-    recentListNotifier.value = recentListNotifier.value.sublist(0, 10);
+  if (recentList.length > 10) {
+    recentList = recentList.sublist(0, 10);
     recentDb.deleteAt(0);
   }
-  recentListNotifier.notifyListeners();
+  List<Songs> recent = [];
+  recent.addAll(recentList);
+
+  return recent;
+  // recentListNotifier.notifyListeners();
 }

@@ -1,4 +1,6 @@
 import 'dart:async';
+
+import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/songs_db_functions.dart';
 import 'package:black_beatz/presentation/all_songs/all_songs.dart';
 import 'package:black_beatz/core/colors/colors.dart';
@@ -9,6 +11,7 @@ import 'package:black_beatz/presentation/search_screens/search_screen.dart';
 import 'package:black_beatz/presentation/user_screen/user_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -26,8 +29,8 @@ class _NavBarState extends State<NavBar> {
   int pressedButtonNo = 1;
   final screens = [
     HomeScreen(),
-    const AllSongs(),
-    const UserScreen(),
+     AllSongs(),
+     UserScreen(),
   ];
   final titles = [
     Padding(
@@ -123,22 +126,23 @@ class _NavBarState extends State<NavBar> {
       index: index,
       items: [
         FaIcon(FontAwesomeIcons.houseChimney,
-            color: (pressedButtonNo == 0)
-                ? (whiteColor)
-                :  curvedNavBarIconColor),
+            color:
+                (pressedButtonNo == 0) ? (whiteColor) : curvedNavBarIconColor),
         FaIcon(FontAwesomeIcons.indent,
-            color: (pressedButtonNo == 1)
-                ? (whiteColor)
-                :  curvedNavBarIconColor),
+            color:
+                (pressedButtonNo == 1) ? (whiteColor) : curvedNavBarIconColor),
         FaIcon(FontAwesomeIcons.userLarge,
-            color: (pressedButtonNo == 2)
-                ? (whiteColor)
-                :  curvedNavBarIconColor),
+            color:
+                (pressedButtonNo == 2) ? (whiteColor) : curvedNavBarIconColor),
       ],
       height: 60,
       onTap: (index) => setState(() {
+        if (pressedButtonNo != index) {
+          context.read<AnimationBloc>().add(StartEventAnimation(false));
+        }
         this.index = index;
         pressedButtonNo = index;
+        
       }),
     );
   }
@@ -212,7 +216,7 @@ class _NavBarState extends State<NavBar> {
                 Text(
                   'Notification',
                   style: TextStyle(
-                    color:  drawerlistTextColor,
+                    color: drawerlistTextColor,
                     fontWeight: FontWeight.w600,
                     fontSize: MediaQuery.of(context).size.height * 0.018,
                     // fontSize: 16,
@@ -239,7 +243,7 @@ class _NavBarState extends State<NavBar> {
               Text(
                 'VERSION 1.0.1',
                 style: TextStyle(
-                    color:  versionTextColor,
+                    color: versionTextColor,
                     fontSize: MediaQuery.of(context).size.height * 0.008,
                     fontWeight: FontWeight.w400),
               ),
@@ -357,9 +361,6 @@ class _NavBarState extends State<NavBar> {
                       const SizedBox(
                         width: 8,
                       ),
-
-
-                      
                       InkWell(
                         onTap: () async {
                           final Uri url = Uri.parse(
@@ -399,7 +400,7 @@ class DrawerlistCustom extends StatelessWidget {
         leading: Text(
           title,
           style: TextStyle(
-            color:  drawerlistTextColor,
+            color: drawerlistTextColor,
             fontWeight: FontWeight.w600,
             fontSize: MediaQuery.of(context).size.height * 0.018,
             // fontSize: 16,
@@ -408,7 +409,7 @@ class DrawerlistCustom extends StatelessWidget {
         trailing: FaIcon(
           icon,
           size: MediaQuery.of(context).size.height * 0.024,
-          color:  drawerlistTextColor,
+          color: drawerlistTextColor,
         ),
       ),
     );

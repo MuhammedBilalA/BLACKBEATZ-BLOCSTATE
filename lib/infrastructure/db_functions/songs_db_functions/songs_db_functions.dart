@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:black_beatz/domain/fav_db_model/fav_model.dart';
 
 import 'package:black_beatz/domain/playlist_model/playlist_model.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 
 import 'package:black_beatz/presentation/all_songs/all_songs.dart';
-import 'package:black_beatz/core/widgets/splash_screen.dart';
+import 'package:black_beatz/presentation/welcome_screens/splash_screen.dart';
 import 'package:black_beatz/presentation/favourite_screens/favourite.dart';
 import 'package:black_beatz/presentation/home_screens/widgets/vertical_scroll.dart';
 import 'package:black_beatz/presentation/mostly_played/mostly_played.dart';
@@ -22,23 +24,27 @@ bool notification = true;
 class Fetching {
   final OnAudioQuery audioQuery = OnAudioQuery();
 
-  songfetch() async {
+  Future<List<Songs>> songfetch() async {
     Box<Songs> songdb = await Hive.openBox('allsongsdb');
 
     if (songdb.isEmpty) {
-      await fetchFromDevice();
+      List<Songs> newSong = await fetchFromDevice();
+      return newSong;
     } else {
       allSongs.addAll(songdb.values);
+      List<Songs> newSongs = [];
+      newSongs.addAll(songdb.values);
 
-      await favFetching();
-      await playlistfetching();
-      await recentfetch();
-      await mostplayedfetch();
+      // await favFetching();
+      // await playlistfetching();
+      // await recentfetch();
+      // await mostplayedfetch();
       await notificationFetching();
+      return newSongs;
     }
   }
 
-  //  request for permission 
+  //  request for permission
   //of storage
   Future requestPermission() async {
     var status = await Permission.storage.request();
@@ -50,7 +56,7 @@ class Fetching {
   }
 
   // fetch songs from device storage after getting permission
-  Future fetchFromDevice() async {
+  Future<List<Songs>> fetchFromDevice() async {
     //Asking for permission for device storage
     bool status = await requestPermission();
     if (status) {
@@ -75,12 +81,15 @@ class Fetching {
       }
       Box<Songs> songdb = await Hive.openBox('allsongsdb');
       songdb.addAll(allSongs);
-      await playlistfetching();
-      await favFetching();
-      await recentfetch();
-      await mostplayedfetch();
+      // await playlistfetching();
+      // await favFetching();
+      // await recentfetch();
+      // await mostplayedfetch();
       await notificationFetching();
+
+      return allSongs;
     }
+    return [];
   }
 
   Future notificationFetching() async {
@@ -95,7 +104,7 @@ class Fetching {
   }
 
   //Fetching Favorite songs...
-  Future favFetching() async {
+  Future<List<Songs>> favFetching() async {
     List<Favmodel> favSongCheck = [];
     Box<Favmodel> favdb = await Hive.openBox('favorite');
     favSongCheck.addAll(favdb.values);
@@ -103,6 +112,7 @@ class Fetching {
       int count = 0;
       for (var songs in allSongs) {
         if (favs.id == songs.id) {
+          log(favoritelist.value.length.toString());
           favoritelist.value.insert(0, songs);
           continue;
         } else {
@@ -114,11 +124,15 @@ class Fetching {
         favdb.delete(key);
       }
     }
+    List<Songs> favlist = [];
+    favlist.addAll(favoritelist.value);
+
+    return favlist;
   }
 
   //Fetching from recent
 
-  recentfetch() async {
+  Future<List<Songs>> recentfetch() async {
     Box<int> recentDb = await Hive.openBox('recent');
     List<Songs> recenttemp = [];
     for (int element in recentDb.values) {
@@ -129,11 +143,14 @@ class Fetching {
         }
       }
     }
-    recentListNotifier.value = recenttemp.reversed.toList();
+    recentList = recenttemp.reversed.toList();
+    List<Songs> recentfetch = [];
+    recentfetch.addAll(recentList);
+    return recentfetch;
   }
 
   //Fetching playlist ...
-  Future playlistfetching() async {
+  Future<List<EachPlaylist>> playlistfetching() async {
     Box<PlaylistClass> playlistdb = await Hive.openBox('playlist');
 
     for (PlaylistClass elements in playlistdb.values) {
@@ -149,15 +166,19 @@ class Fetching {
       }
       playListNotifier.value.insert(0, playlistFetch);
     }
+    List<EachPlaylist> eachPlaylistList = [];
+    eachPlaylistList.addAll(playListNotifier.value);
+    return eachPlaylistList;
   }
 
   //mostlyplayed fetching
-  mostplayedfetch() async {
+  Future<List<Songs>> mostplayedfetch() async {
     Box<int> mostplayedDb = await Hive.openBox('mostplayed');
     if (mostplayedDb.isEmpty) {
       for (Songs song in allSongs) {
         mostplayedDb.put(song.id, 0);
       }
+      return [];
     } else {
       List<List<int>> mostplayedTemp = [];
       for (Songs song in allSongs) {
@@ -187,6 +208,7 @@ class Fetching {
           }
         }
       }
+      return mostPlayedList;
     }
   }
 
@@ -251,7 +273,7 @@ class Fetching {
         }
       }
     }
-    recentListNotifier.value = recenttemp.reversed.toList();
+    recentList = recenttemp.reversed.toList();
 
     // ---------------------------------------------------------
 
@@ -320,6 +342,6 @@ class Fetching {
     plusiconNotifier.notifyListeners();
     playlistBodyNotifier.notifyListeners();
     allsongBodyNotifier.notifyListeners();
-    recentListNotifier.notifyListeners();
+  
   }
 }

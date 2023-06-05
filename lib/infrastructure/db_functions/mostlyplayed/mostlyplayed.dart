@@ -1,4 +1,5 @@
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
+
 import 'package:black_beatz/presentation/welcome_screens/splash_screen.dart';
 import 'package:black_beatz/presentation/mostly_played/mostly_played.dart';
 import 'package:hive_flutter/hive_flutter.dart';

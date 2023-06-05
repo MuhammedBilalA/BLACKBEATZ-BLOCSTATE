@@ -2,7 +2,7 @@ import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
 import 'package:black_beatz/core/widgets/listtilecustom.dart';
-import 'package:black_beatz/core/widgets/splash_screen.dart';
+import 'package:black_beatz/presentation/welcome_screens/splash_screen.dart';
 import 'package:black_beatz/presentation/favourite_screens/favourite.dart';
 import 'package:black_beatz/presentation/playing_screen/mini_player.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/player_functions.dart';

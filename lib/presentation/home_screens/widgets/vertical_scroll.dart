@@ -1,3 +1,5 @@
+import 'package:black_beatz/application/animation/animation_bloc.dart';
+import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/recent_functions/recent_functions.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
@@ -8,10 +10,11 @@ import 'package:black_beatz/presentation/playing_screen/mini_player.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/player_functions.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/addto_playlist_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-ValueNotifier<List<Songs>> recentListNotifier = ValueNotifier([]);
+List<Songs> recentList = [];
 
 class VerticalScroll extends StatefulWidget {
   const VerticalScroll({super.key});
@@ -23,43 +26,38 @@ class VerticalScroll extends StatefulWidget {
 class _VerticalScrollState extends State<VerticalScroll> {
   double screenWidth = 0;
 
-  bool startAnimation = false;
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        startAnimation = true;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    context.read<AnimationBloc>().add(StartEventAnimation(true));
+
     screenWidth = MediaQuery.of(context).size.width;
-    return SingleChildScrollView(
-      child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: ValueListenableBuilder(
-            valueListenable: recentListNotifier,
-            builder: (context, value, child) =>
-                (recentListNotifier.value.isNotEmpty)
-                    ? verticalScroolfunction()
-                    : const Center(
-                        child: Text(
-                          'Play Some Songs',
-                          style: TextStyle(
-                              color: whiteColor,
-                              fontFamily: 'Peddana',
-                              fontSize: 26),
-                        ),
-                      ),
-          )),
+    return BlocBuilder<AnimationBloc, AnimationState>(
+      builder: (context, stateanimation) {
+        return SingleChildScrollView(
+          child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: BlocBuilder<BlackBeatzBloc, BlackBeatzState>(
+                builder: (context, state) {
+                  return (state.recentList.isNotEmpty)
+                      ? verticalScroolfunction(
+                          stateanimation.startAnimation, state)
+                      : const Center(
+                          child: Text(
+                            'Play Some Songs',
+                            style: TextStyle(
+                                color: whiteColor,
+                                fontFamily: 'Peddana',
+                                fontSize: 26),
+                          ),
+                        );
+                },
+              )),
+        );
+      },
     );
   }
 
-  verticalScroolfunction() {
+  verticalScroolfunction(startAnimation, state) {
     return ListView.separated(
         physics: const BouncingScrollPhysics(),
         itemBuilder: ((context, index) {
@@ -77,7 +75,7 @@ class _VerticalScrollState extends State<VerticalScroll> {
               ),
               child: InkWell(
                 onTap: () {
-                  playingAudio(recentListNotifier.value, index);
+                  playingAudio(state.recentList, index);
 
                   showBottomSheet(
                       backgroundColor: transparentColor,
@@ -92,13 +90,13 @@ class _VerticalScrollState extends State<VerticalScroll> {
                   index: index,
                   context: context,
                   title: Text(
-                    recentListNotifier.value[index].songName ??= 'unknown',
+                    state.recentList[index].songName ??= 'unknown',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, color: whiteColor),
                   ),
                   subtitle: Text(
-                    recentListNotifier.value[index].artist ??= 'unknown',
+                    state.recentList[index].artist ??= 'unknown',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(color: whiteColor),
                   ),
@@ -109,7 +107,7 @@ class _VerticalScrollState extends State<VerticalScroll> {
                     artworkQuality: FilterQuality.high,
                     artworkBorder: BorderRadius.circular(10),
                     artworkFit: BoxFit.cover,
-                    id: recentListNotifier.value[index].id!,
+                    id: state.recentList[index].id!,
                     type: ArtworkType.AUDIO,
                     nullArtworkWidget: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
@@ -120,21 +118,23 @@ class _VerticalScrollState extends State<VerticalScroll> {
                     ),
                   ),
                   trailing1: Hearticon(
-                    currentSong: recentListNotifier.value[index],
-                    isfav: favoritelist.value
-                        .contains(recentListNotifier.value[index]),
+                    currentSong: state.recentList[index],
+                    isfav: state.favoritelist.contains(state.recentList[index]),
                   ),
                   trailing2: PopupMenuButton(
-                      onSelected: (value) {
+                      onSelected: (value) async {
                         if (value == 0) {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (ctx) => AddToPlaylist(
-                                    addToPlaylistSong:
-                                        recentListNotifier.value[index],
+                                    addToPlaylistSong: state.recentList[index],
                                   )));
                         } else {
-                          recentremove(recentListNotifier.value[index]);
-                          recentListNotifier.notifyListeners();
+                          // recentListNotifier.notifyListeners();
+                          List<Songs> returnrecentList =
+                              await recentremove(state.recentList[index]);
+                          context
+                              .read<BlackBeatzBloc>()
+                              .add(GetRecent(recentList: returnrecentList));
                         }
                       },
                       shape: RoundedRectangleBorder(
@@ -202,6 +202,6 @@ class _VerticalScrollState extends State<VerticalScroll> {
             height: MediaQuery.of(context).size.height * 0.000,
           );
         }),
-        itemCount: recentListNotifier.value.length);
+        itemCount: state.recentList.length);
   }
 }

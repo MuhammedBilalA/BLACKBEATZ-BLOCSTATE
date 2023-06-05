@@ -6,12 +6,10 @@ import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_uniqu
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:black_beatz/domain/playlist_model/playlist_model.dart';
 
-
 Future playlistCreating(playlistName) async {
   playListNotifier.value.insert(0, EachPlaylist(name: playlistName));
   Box<PlaylistClass> playlistdb = await Hive.openBox('playlist');
   playlistdb.add(PlaylistClass(playlistName: playlistName));
-  
 }
 
 Future playlistAddDB(Songs addingSong, String playlistName) async {
@@ -23,12 +21,12 @@ Future playlistAddDB(Songs addingSong, String playlistName) async {
       PlaylistClass ubdatePlaylist = PlaylistClass(playlistName: playlistName);
       ubdatePlaylist.items.addAll(element.items);
       ubdatePlaylist.items.add(addingSong.id!);
+
       playlistdb.put(key, ubdatePlaylist);
       break;
     }
   }
   plusiconNotifier.notifyListeners();
-   
 }
 
 Future playlistRemoveDB(Songs removingSong, String playlistName) async {

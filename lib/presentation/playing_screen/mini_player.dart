@@ -55,7 +55,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
               child: playerMini.builderCurrent(
                 builder: (context, playing) {
                   int id = int.parse(playing.audio.audio.metas.id!);
-                  currentsongFinder(id);
+                  currentsongFinder(id,context);
                   return Column(
                     children: [
                       Row(

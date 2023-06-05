@@ -6,37 +6,10 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class PlaylistScreen extends StatefulWidget {
-  const PlaylistScreen({super.key});
+class PlaylistScreen extends StatelessWidget {
+   PlaylistScreen({super.key});
 
-  @override
-  State<PlaylistScreen> createState() => _PlaylistScreenState();
-}
-
-// ----playlistBodyNotifier for rebuilding the playlist body
-ValueNotifier playlistBodyNotifier = ValueNotifier([]);
-
-
-// ----playlistNotifier for  creating playlist objects and its contain the playlist name and container
-ValueNotifier<List<EachPlaylist>> playListNotifier = ValueNotifier([]);
-
-final playlistFormkey = GlobalKey<FormState>();
-TextEditingController playlistControllor = TextEditingController();
-
-class _PlaylistScreenState extends State<PlaylistScreen> {
   double screenWidth = 0;
-
-  bool startAnimation = false;
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        startAnimation = true;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,131 +81,124 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
           itemBuilder: (context, index) {
-            return AnimatedContainer(
-              width: screenWidth,
-              curve: Curves.bounceInOut,
-              duration: Duration(milliseconds: 300 + (index * 200)),
-              transform: Matrix4.translationValues(
-                  startAnimation ? 0 : screenWidth, 0, 0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (ctx) => PlaylistUniqueScreen(
-                            playlist: playListNotifier.value[index],
-                          )));
-                },
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.green,
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => PlaylistUniqueScreen(
+                          playlist: playListNotifier.value[index],
+                        )));
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.green,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.asset(
+                        'assets/images/playlistimagesqure.jpg',
+                        width: double.infinity,
+                        fit: BoxFit.cover,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.asset(
-                          'assets/images/playlistimagesqure.jpg',
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                      top: 0,
+                      right: 0,
+                      child: PopupMenuButton(
+                          onSelected: (value) {
+                            if (value == 0) {
+                              renamefunction(context, index);
+                            } else {
+                              deleteplaylistfunction(index,context);
+                            }
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          color: backgroundColorDark,
+                          icon: const FaIcon(
+                            FontAwesomeIcons.ellipsisVertical,
+                            color: whiteColor,
+                            size: 26,
+                          ),
+                          itemBuilder: (context) => [
+                                //---------Edit Playlist--------------
+                                const PopupMenuItem(
+                                  value: 0,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Edit Playlist',
+                                        style: TextStyle(
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Peddana',
+                                            height: 0.6,
+                                            fontSize: 17),
+                                      ),
+                                      Icon(
+                                        Icons.edit,
+                                        color: whiteColor,
+                                        size: 20,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                //---------Delete playlist---------
+                                const PopupMenuItem(
+                                  value: 1,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Delete Playlist',
+                                        style: TextStyle(
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Peddana',
+                                            height: 0.6,
+                                            fontSize: 17),
+                                      ),
+                                      Icon(
+                                        Icons.delete_forever,
+                                        color: whiteColor,
+                                        size: 20,
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ])),
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.466,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(15),
+                            bottomRight: Radius.circular(15)),
+                        color: Color.fromARGB(209, 25, 0, 41),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 18.0, top: 8),
+                        child: Text(
+                          playListNotifier.value[index].name,
+                          style: const TextStyle(
+                              height: 1,
+                              color: whiteColor,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Peddana'),
                         ),
                       ),
                     ),
-                    Positioned(
-                        top: 0,
-                        right: 0,
-                        child: PopupMenuButton(
-                            onSelected: (value) {
-                              if (value == 0) {
-                                renamefunction(context, index);
-                              } else {
-                                deleteplaylistfunction(index);
-                              }
-                            },
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            color: backgroundColorDark,
-                            icon: const FaIcon(
-                              FontAwesomeIcons.ellipsisVertical,
-                              color: whiteColor,
-                              size: 26,
-                            ),
-                            itemBuilder: (context) => [
-                                  //---------Edit Playlist--------------
-                                  const PopupMenuItem(
-                                    value: 0,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Edit Playlist',
-                                          style: TextStyle(
-                                              color: whiteColor,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Peddana',
-                                              height: 0.6,
-                                              fontSize: 17),
-                                        ),
-                                        Icon(
-                                          Icons.edit,
-                                          color: whiteColor,
-                                          size: 20,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  //---------Delete playlist---------
-                                  const PopupMenuItem(
-                                    value: 1,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Delete Playlist',
-                                          style: TextStyle(
-                                              color: whiteColor,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Peddana',
-                                              height: 0.6,
-                                              fontSize: 17),
-                                        ),
-                                        Icon(
-                                          Icons.delete_forever,
-                                          color: whiteColor,
-                                          size: 20,
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ])),
-                    Positioned(
-                      bottom: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.466,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15)),
-                          color: Color.fromARGB(209, 25, 0, 41),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 18.0, top: 8),
-                          child: Text(
-                            playListNotifier.value[index].name,
-                            style: const TextStyle(
-                                height: 1,
-                                color: whiteColor,
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Peddana'),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             );
           },
@@ -287,7 +253,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        setState(() {});
+                      
                         playlistControllor.text = '';
                         Navigator.of(context).pop();
                       },
@@ -307,7 +273,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                       if (playlistFormkey.currentState!.validate()) {
                         playlistCreating(playlistControllor.text);
 
-                        setState(() {});
+                   
                         playlistControllor.text = '';
                         Navigator.of(ctx).pop();
                       }
@@ -329,7 +295,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         });
   }
 
-  deleteplaylistfunction(int index) {
+  deleteplaylistfunction(int index,BuildContext context) {
     showDialog(
         context: context,
         builder: (ctx) {
@@ -362,12 +328,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
+                     
                         playlistdelete(index);
                         Navigator.of(ctx).pop();
 
                         playlistBodyNotifier.notifyListeners();
-                      });
+                      
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -436,7 +402,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        setState(() {});
+                        
                         playlistControllor.text = '';
                         Navigator.of(context).pop();
                       },
@@ -454,11 +420,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (playlistFormkey.currentState!.validate()) {
-                        setState(() {
+                     
                           // ---renaming the playlist
 
                           playlistrename(index, rename.text);
-                        });
+                        
                         playlistControllor.text = '';
                         Navigator.of(ctx).pop();
                       }
@@ -480,3 +446,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         });
   }
 }
+
+// ----playlistBodyNotifier for rebuilding the playlist body
+ValueNotifier playlistBodyNotifier = ValueNotifier([]);
+
+// ----playlistNotifier for  creating playlist objects and its contain the playlist name and container
+ValueNotifier<List<EachPlaylist>> playListNotifier = ValueNotifier([]);
+
+final playlistFormkey = GlobalKey<FormState>();
+TextEditingController playlistControllor = TextEditingController();

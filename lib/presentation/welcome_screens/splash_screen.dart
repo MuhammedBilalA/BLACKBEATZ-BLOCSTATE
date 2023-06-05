@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/songs_db_functions.dart';
+import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 
 import 'package:black_beatz/core/colors/colors.dart';
@@ -7,6 +8,7 @@ import 'package:black_beatz/presentation/welcome_screens/welcome_screen_1.dart';
 import 'package:black_beatz/main.dart';
 import 'package:black_beatz/presentation/navbar_screens/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,9 +23,12 @@ List<Songs> allSongs = [];
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    context.read<BlackBeatzBloc>().add(GetAllSongs());
+
     Timer(const Duration(seconds: 3, milliseconds: 500), () async {
-      Fetching fetching = Fetching();
-      await fetching.songfetch();
+      // Fetching fetching = Fetching();
+      // await fetching.songfetch();
+
       checkUserLoggedIn();
     });
 
