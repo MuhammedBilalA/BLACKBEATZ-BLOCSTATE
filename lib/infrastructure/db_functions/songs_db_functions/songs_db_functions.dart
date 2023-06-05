@@ -105,6 +105,7 @@ class Fetching {
 
   //Fetching Favorite songs...
   Future<List<Songs>> favFetching() async {
+    List<Songs> newList = [];
     List<Favmodel> favSongCheck = [];
     Box<Favmodel> favdb = await Hive.openBox('favorite');
     favSongCheck.addAll(favdb.values);
@@ -112,8 +113,9 @@ class Fetching {
       int count = 0;
       for (var songs in allSongs) {
         if (favs.id == songs.id) {
-          log(favoritelist.length.toString());
           favoritelist.insert(0, songs);
+          log(favoritelist.length.toString());
+
           continue;
         } else {
           count++;
@@ -121,13 +123,15 @@ class Fetching {
       }
       if (count == allSongs.length) {
         var key = favs.key;
-        favdb.delete(key);
+        await favdb.delete(key);
       }
     }
-    List<Songs> favlist = [];
-    favlist.addAll(favoritelist);
+    // List<Songs> favlist = [];
+    // favlist.addAll(favoritelist);
+    log('fav list not bloc ${favoritelist.length}');
 
-    return favlist;
+    // return favlist;
+    return favoritelist;
   }
 
   //Fetching from recent

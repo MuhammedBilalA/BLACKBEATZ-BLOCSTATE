@@ -5,15 +5,12 @@ abstract class BlackBeatzEvent {}
 
 class GetAllSongs extends BlackBeatzEvent {}
 
-class GetFavorite extends BlackBeatzEvent {
-  List<Songs> favoriteList;
-  GetFavorite({required this.favoriteList});
-}
+// class GetFavorite extends BlackBeatzEvent {
+//   List<Songs> favoriteList;
+//   GetFavorite({required this.favoriteList});
+// }
 
-class GetRecent extends BlackBeatzEvent {
-  List<Songs> recentList;
-  GetRecent({required this.recentList});
-}
+
 
 class GetPlaylist extends BlackBeatzEvent {
   List<EachPlaylist> playlist;

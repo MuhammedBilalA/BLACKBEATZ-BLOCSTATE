@@ -1,8 +1,10 @@
 part of 'favorite_bloc.dart';
 
-@immutable
-abstract class FavoriteState {
-  
+ class FavoriteState {
+  List<Songs> favoritelist;
+  FavoriteState({required this.favoritelist});
 }
 
-class FavoriteInitial extends FavoriteState {}
+class FavoriteInitial extends FavoriteState {
+  FavoriteInitial():super(favoritelist: []);
+}

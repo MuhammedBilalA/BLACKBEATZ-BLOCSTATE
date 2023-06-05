@@ -1,5 +1,6 @@
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
 import 'package:black_beatz/core/widgets/listtilecustom.dart';
@@ -63,6 +64,9 @@ class _AllSongsState extends State<AllSongs> {
   Widget allSongsListView(startAnimation) {
     return BlocBuilder<BlackBeatzBloc, BlackBeatzState>(
       builder: (context, state) {
+        // context
+        //     .read<FavoriteBloc>()
+        //     .add(GetFavorite(favoriteList: state.favoritelist));
         return ListView.separated(
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
@@ -110,10 +114,13 @@ class _AllSongsState extends State<AllSongs> {
                         ),
                       ),
                     ),
-                    trailing1: Hearticon(
-                      currentSong: state.allSongs[index],
-                      isfav: state.favoritelist.contains(allSongs[index]),
-                    ),
+                    trailing1:
+                        Hearticon(
+                          currentSong: state.allSongs[index],
+                          isfav: favoritelist.contains(state.allSongs[index]),
+                        ),
+                     
+                     
                     trailing2: PopupMenuButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
 
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 
@@ -24,6 +26,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     context.read<BlackBeatzBloc>().add(GetAllSongs());
+
+    context.read<FavoriteBloc>().add(FetchAllFavorites());
+    context.read<RecentBloc>().add(GetRcent());
 
     Timer(const Duration(seconds: 3, milliseconds: 500), () async {
       // Fetching fetching = Fetching();

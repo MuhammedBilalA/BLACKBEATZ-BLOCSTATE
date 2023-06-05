@@ -8,3 +8,7 @@ class GetFavorite extends FavoriteEvent {
   List<Songs> favoriteList;
   GetFavorite({required this.favoriteList});
 }
+
+class FetchAllFavorites extends FavoriteEvent{
+  
+}

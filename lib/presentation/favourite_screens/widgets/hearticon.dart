@@ -1,4 +1,6 @@
-import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+import 'dart:developer';
+
+import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/fav_db_functions/fav_functions.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 
@@ -7,7 +9,6 @@ import 'package:black_beatz/core/widgets/snackbar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class Hearticon extends StatefulWidget {
   Songs currentSong;
@@ -26,47 +27,57 @@ class Hearticon extends StatefulWidget {
 class _HearticonState extends State<Hearticon> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () async {
-          // setState(()async {
-          if (widget.isfav) {
-            widget.isfav = false;
+    return BlocBuilder<FavoriteBloc, FavoriteState>(
+      builder: (context, state) {
+        return InkWell(
+            onTap: () async {
+              // setState(()async {
+              if (widget.isfav) {
+                widget.isfav = false;
 
-            List<Songs> returnList = await removeFavourite(widget.currentSong);
-            context
-                .read<BlackBeatzBloc>()
-                .add(GetFavorite(favoriteList: returnList));
-            snackbarRemoving(text: 'Removed From Favourite', context: context);
-          } else {
-            widget.isfav = true;
+                List<Songs> returnList =
+                    await removeFavourite(widget.currentSong);
 
-            List<Songs> returnList = await addFavourite(widget.currentSong);
-            context
-                .read<BlackBeatzBloc>()
-                .add(GetFavorite(favoriteList: returnList));
-            snackbarAdding(text: 'Added To Favourite', context: context);
-          }
-          if (widget.refresh != null) {
+                context
+                    .read<FavoriteBloc>()
+                    .add(GetFavorite(favoriteList: returnList));
 
-            // favoritelist.notifyListeners();
-            // allsongBodyNotifier.notifyListeners();
-            // homeScreenNotifier.notifyListeners();
-            // recentListNotifier.notifyListeners();
-            // plusiconNotifier.notifyListeners();
-            // data.notifyListeners();
-          }
-          // });
-        },
-        child: (widget.isfav)
-            ? const Icon(
-                Icons.favorite_sharp,
-                size: 33,
-                color: backgroundColorDark,
-              )
-            : const Icon(
-                Icons.favorite_border,
-                color: backgroundColorDark,
-                size: 33,
-              ));
+                snackbarRemoving(
+                    text: 'Removed From Favourite', context: context);
+              } else {
+                widget.isfav = true;
+
+                List<Songs> returnList = await addFavourite(widget.currentSong);
+                context
+                    .read<FavoriteBloc>()
+                    .add(GetFavorite(favoriteList: returnList));
+
+                   log('adding fav state.favoritelist  ${state.favoritelist.length}');
+                   log('adding fav returnList  ${returnList.length}');
+                snackbarAdding(text: 'Added To Favourite', context: context);
+              }
+              if (widget.refresh != null) {
+                // favoritelist.notifyListeners();
+                // allsongBodyNotifier.notifyListeners();
+                // homeScreenNotifier.notifyListeners();
+                // recentListNotifier.notifyListeners();
+                // plusiconNotifier.notifyListeners();
+                // data.notifyListeners();
+              }
+              // });
+            },
+            child: (widget.isfav)
+                ? const Icon(
+                    Icons.favorite_sharp,
+                    size: 33,
+                    color: backgroundColorDark,
+                  )
+                : const Icon(
+                    Icons.favorite_border,
+                    color: backgroundColorDark,
+                    size: 33,
+                  ));
+      },
+    );
   }
 }

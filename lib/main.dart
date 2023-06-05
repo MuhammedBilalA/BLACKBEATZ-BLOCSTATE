@@ -1,5 +1,7 @@
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
 import 'package:black_beatz/domain/playlist_model/playlist_model.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
@@ -44,8 +46,12 @@ class BlackBeatz extends StatelessWidget {
         BlocProvider(
           create: (context) => BlackBeatzBloc(),
         ),
+        BlocProvider(
+          create: (context) => FavoriteBloc(),
+        )
+        ,BlocProvider(create: (context) => RecentBloc(),)
       ],
-      child:  MaterialApp(
+      child: MaterialApp(
         theme: ThemeData(primarySwatch: blueColor),
         debugShowCheckedModeBanner: false,
         home: const SplashScreen(),

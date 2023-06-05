@@ -1,7 +1,8 @@
-import 'dart:developer';
+
 
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/recent_functions/recent_functions.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
@@ -39,7 +40,7 @@ class _VerticalScrollState extends State<VerticalScroll> {
         return SingleChildScrollView(
           child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
-              child: BlocBuilder<BlackBeatzBloc, BlackBeatzState>(
+              child: BlocBuilder<RecentBloc, RecentState>(
                 builder: (context, state) {
                   return (state.recentList.isNotEmpty)
                       ? verticalScroolfunction(
@@ -122,7 +123,7 @@ class _VerticalScrollState extends State<VerticalScroll> {
                   ),
                   trailing1: Hearticon(
                     currentSong: state.recentList[index],
-                    isfav: state.favoritelist.contains(state.recentList[index]),
+                    isfav: favoritelist.contains(state.recentList[index]),
                   ),
                   trailing2: PopupMenuButton(
                       onSelected: (value) async {
@@ -134,9 +135,9 @@ class _VerticalScrollState extends State<VerticalScroll> {
                         } else {
                           // recentListNotifier.notifyListeners();
                           List<Songs> returnrecentList =
-                              await recentremove(state.recentList[index]);
+                              await recentremove(recentList[index]);
                           context
-                              .read<BlackBeatzBloc>()
+                              .read<RecentBloc>()
                               .add(GetRecent(recentList: returnrecentList));
                         }
                       },

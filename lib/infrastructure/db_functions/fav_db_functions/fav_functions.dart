@@ -7,7 +7,7 @@ Future <List<Songs>> addFavourite(Songs song) async {
   favoritelist.insert(0, song);
   Box<Favmodel> favdb = await Hive.openBox('favorite');
   Favmodel temp = Favmodel(id: song.id);
-  favdb.add(temp);
+ await favdb.add(temp);
 
   List<Songs> addedlist = [];
   addedlist.addAll(favoritelist);
@@ -22,7 +22,7 @@ Future <List<Songs>>removeFavourite(Songs song) async {
   for (var element in templist) {
     if (element.id == song.id) {
       var key = element.key;
-      favdb.delete(key);
+     await favdb.delete(key);
       break;
     }
   }

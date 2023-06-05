@@ -1,5 +1,5 @@
 
-import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
@@ -21,7 +21,9 @@ class FavouriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BlackBeatzBloc, BlackBeatzState>(
+   
+
+    return BlocBuilder<FavoriteBloc, FavoriteState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: backgroundColorLight,
@@ -68,14 +70,13 @@ class FavouriteScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 8),
           child: Text(
-              '${state.favoritelist.length} Songs',
-              style: const TextStyle(
-                  height: 2.2,
-                  fontFamily: 'Peddana',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 25),
-            ),
-          
+            '${state.favoritelist.length} Songs',
+            style: const TextStyle(
+                height: 2.2,
+                fontFamily: 'Peddana',
+                fontWeight: FontWeight.w400,
+                fontSize: 25),
+          ),
         )
       ],
     );
@@ -154,11 +155,11 @@ class FavouriteScreen extends StatelessWidget {
                     size: 26,
                   ),
                   itemBuilder: (context) => [
-                       const PopupMenuItem(
+                        const PopupMenuItem(
                           value: 0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children:  [
+                            children: [
                               Text(
                                 'ADD TO PLAYLIST',
                                 style: TextStyle(
