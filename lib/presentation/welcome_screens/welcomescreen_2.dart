@@ -220,7 +220,7 @@ class WelcomeScreen2 extends StatelessWidget {
       snackbarAdding(text: 'Login Successfully', context: ctx);
 
       Navigator.of(ctx).pushReplacement(
-          MaterialPageRoute(builder: ((ctx1) => const NavBar())));
+          MaterialPageRoute(builder: ((ctx1) =>  NavBar())));
     } else {
       ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
           behavior: SnackBarBehavior.floating,

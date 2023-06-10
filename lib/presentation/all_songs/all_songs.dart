@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/notification/notification_bloc.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
 import 'package:black_beatz/core/widgets/listtilecustom.dart';
@@ -19,7 +20,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 ValueNotifier allsongBodyNotifier = ValueNotifier([]);
 
 class AllSongs extends StatelessWidget {
-   AllSongs({super.key});
+  AllSongs({super.key});
 
   double screenWidth = 0;
 
@@ -73,7 +74,7 @@ class AllSongs extends StatelessWidget {
                     showBottomSheet(
                         backgroundColor: transparentColor,
                         context: context,
-                        builder: (context) => const MiniPlayer());
+                        builder: (context) =>  MiniPlayer());
                   },
                   child: ListtileCustomWidget(
                     index: index,

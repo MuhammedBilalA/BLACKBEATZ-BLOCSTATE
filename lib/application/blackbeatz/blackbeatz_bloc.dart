@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/notification/notification_bloc.dart';
 import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/songs_db_functions.dart';
@@ -24,8 +25,8 @@ class BlackBeatzBloc extends Bloc<BlackBeatzEvent, BlackBeatzState> {
       log(allSongs.length.toString());
       event.context.read<FavoriteBloc>().add(FetchAllFavorites());
       event.context.read<RecentBloc>().add(GetRcent());
+      event.context.read<NotificationBloc>().add(GetNotification());
 
-    
       List<Songs> mostPlayedList = await fetching.mostplayedfetch();
       List<EachPlaylist> playList = await fetching.playlistfetching();
 
@@ -37,7 +38,6 @@ class BlackBeatzBloc extends Bloc<BlackBeatzEvent, BlackBeatzState> {
         plusIcon: state.plusIcon,
       ));
     });
- 
 
     on<GetPlaylist>(
       (event, emit) {

@@ -1,31 +1,26 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/repeat/repeat_bloc.dart';
+import 'package:black_beatz/application/shuffle/shuffle_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/mostlyplayed_functions/mostlyplayed.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
 import 'package:black_beatz/core/widgets/snackbar.dart';
-import 'package:black_beatz/presentation/favourite_screens/favourite.dart';
 import 'package:black_beatz/presentation/playing_screen/mini_player.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/player_functions.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/addto_playlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:marquee/marquee.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-class PlayScreen extends StatefulWidget {
-  const PlayScreen({
+class PlayScreen extends StatelessWidget {
+  PlayScreen({
     super.key,
   });
 
-  @override
-  State<PlayScreen> createState() => _PlayScreenState();
-}
-
-bool repeat = false;
-bool shuffle = false;
-
-class _PlayScreenState extends State<PlayScreen> {
   bool playerDone = true;
 
   @override
@@ -52,7 +47,7 @@ class _PlayScreenState extends State<PlayScreen> {
         ),
         child: playerMini.builderCurrent(builder: (context, playing) {
           int id = int.parse(playing.audio.audio.metas.id!);
-          currentsongFinder(id,context);
+          currentsongFinder(id, context);
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -197,9 +192,7 @@ class _PlayScreenState extends State<PlayScreen> {
                           borderRadius: BorderRadius.circular(70),
                           onTap: () {
                             playerMini.playOrPause();
-                            setState(() {
-                              isPlaying = !isPlaying;
-                            });
+                            isPlaying = !isPlaying;
                           },
                           child: Container(
                             height: 120,
@@ -214,11 +207,10 @@ class _PlayScreenState extends State<PlayScreen> {
                                 width: 70,
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.centerLeft,
-                                    transform: GradientRotation(8),
-                                    colors:playOrPauseGradient
-                                  ),
+                                      begin: Alignment.topRight,
+                                      end: Alignment.centerLeft,
+                                      transform: GradientRotation(8),
+                                      colors: playOrPauseGradient),
                                   borderRadius: BorderRadius.circular(40),
                                   color: playScreenProgressBarColor,
                                 ),
@@ -273,81 +265,96 @@ class _PlayScreenState extends State<PlayScreen> {
                         )
                       ],
                       gradient: const LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: playScreenLastContainerGradient
-                      ),
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: playScreenLastContainerGradient),
                       borderRadius: BorderRadius.circular(30)),
                   child: Row(
                     children: [
                       const Spacer(
                         flex: 2,
                       ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (repeat == false) {
-                              repeat = true;
-
-                              playerMini.setLoopMode(LoopMode.single);
-                              snackbarAdding(
-                                  text: 'Added To Repeat', context: context);
-                            } else {
-                              repeat = false;
-                              playerMini.setLoopMode(LoopMode.playlist);
-                              snackbarRemoving(
-                                  text: 'Removed From Repeat',
-                                  context: context);
-                            }
-                          });
+                      BlocBuilder<RepeatBloc, RepeatState>(
+                        builder: (context, state) {
+                          return InkWell(
+                            onTap: () {
+                            
+                              if (state.repeat == false) {
+                                context
+                                    .read<RepeatBloc>()
+                                    .add(GetRepeat(repeat: true));
+                                playerMini.setLoopMode(LoopMode.single);
+                                snackbarAdding(
+                                    text: 'Added To Repeat', context: context);
+                              } else {
+                                context
+                                    .read<RepeatBloc>()
+                                    .add(GetRepeat(repeat: false));
+                                playerMini.setLoopMode(LoopMode.playlist);
+                                snackbarRemoving(
+                                    text: 'Removed From Repeat',
+                                    context: context);
+                              }
+                            },
+                            child: (state.repeat == false)
+                                ? const Icon(
+                                    Icons.repeat,
+                                    size: 30,
+                                  )
+                                : const Icon(
+                                    Icons.repeat_one_on_outlined,
+                                    size: 30,
+                                  ),
+                          );
                         },
-                        child: (repeat == false)
-                            ? const Icon(
-                                Icons.repeat,
-                                size: 30,
-                              )
-                            : const Icon(
-                                Icons.repeat_one_on_outlined,
-                                size: 30,
-                              ),
                       ),
                       const Spacer(
                         flex: 1,
                       ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (shuffle == false) {
-                              shuffle = true;
-                              playerMini.toggleShuffle();
-                              snackbarAdding(
-                                  text: 'Added To Shuffle', context: context);
-                            } else {
-                              shuffle = false;
-                              playerMini.toggleShuffle();
-                              snackbarRemoving(
-                                  text: 'Removed From Shuffle',
-                                  context: context);
-                            }
-                          });
+                      BlocBuilder<ShuffleBloc, ShuffleState>(
+                        builder: (context, state) {
+                          return InkWell(
+                            onTap: () {
+                              if (state.shuffle == false) {
+                                context
+                                    .read<ShuffleBloc>()
+                                    .add(GetShuffle(shuffle: true));
+                                playerMini.toggleShuffle();
+                                snackbarAdding(
+                                    text: 'Added To Shuffle', context: context);
+                              } else {
+                                context
+                                    .read<ShuffleBloc>()
+                                    .add(GetShuffle(shuffle: false));
+                                playerMini.toggleShuffle();
+                                snackbarRemoving(
+                                    text: 'Removed From Shuffle',
+                                    context: context);
+                              }
+                            },
+                            child: (state.shuffle == false)
+                                ? const Icon(
+                                    Icons.shuffle,
+                                    size: 28,
+                                  )
+                                : const Icon(
+                                    Icons.shuffle_on_outlined,
+                                    size: 28,
+                                  ),
+                          );
                         },
-                        child: (playerMini.isShuffling.value == false)
-                            ? const Icon(
-                                Icons.shuffle,
-                                size: 28,
-                              )
-                            : const Icon(
-                                Icons.shuffle_on_outlined,
-                                size: 28,
-                              ),
                       ),
                       const Spacer(
-                        flex: 1,git
+                        flex: 1,
                       ),
-                      Hearticon(
-                        currentSong: currentlyplaying!,
-                        isfav: favoritelist.contains(currentlyplaying),
-                      
+                      BlocBuilder<FavoriteBloc, FavoriteState>(
+                        builder: (context, state) {
+                          return Hearticon(
+                            currentSong: currentlyplaying!,
+                            isfav:
+                                state.favoritelist.contains(currentlyplaying),
+                          );
+                        },
                       ),
                       const Spacer(
                         flex: 1,

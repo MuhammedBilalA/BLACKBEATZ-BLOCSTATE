@@ -4,7 +4,12 @@ import 'dart:developer';
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/nav_bar/nav_bar_bloc.dart';
+import 'package:black_beatz/application/notification/notification_bloc.dart';
 import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
+import 'package:black_beatz/application/repeat/repeat_bloc.dart';
+import 'package:black_beatz/application/search/search_bloc.dart';
+import 'package:black_beatz/application/shuffle/shuffle_bloc.dart';
 import 'package:black_beatz/domain/playlist_model/playlist_model.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
@@ -57,6 +62,21 @@ class BlackBeatz extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => RecentBloc(),
+        ),
+        BlocProvider(
+          create: (context) => RepeatBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ShuffleBloc(),
+        ),
+        BlocProvider(
+          create: (context) => NavBarBloc(),
+        ),
+        BlocProvider(
+          create: (context) => NotificationBloc(),
+        ),
+        BlocProvider(
+          create: (context) => SearchBloc(),
         )
       ],
       child: MaterialApp(

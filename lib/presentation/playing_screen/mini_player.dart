@@ -13,14 +13,9 @@ final AssetsAudioPlayer playerMini = AssetsAudioPlayer.withId('0');
 Songs? currentlyplaying;
 List<Audio> playinglistAudio = [];
 
-class MiniPlayer extends StatefulWidget {
-  const MiniPlayer({super.key});
+class MiniPlayer extends StatelessWidget {
+   MiniPlayer({super.key});
 
-  @override
-  State<MiniPlayer> createState() => _MiniPlayerState();
-}
-
-class _MiniPlayerState extends State<MiniPlayer> {
   bool miniplayerDone = true;
 
   @override
@@ -30,7 +25,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
     return InkWell(
       onTap: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const PlayScreen()));
+            .push(MaterialPageRoute(builder: (context) =>  PlayScreen()));
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8, bottom: 3),
@@ -152,9 +147,9 @@ class _MiniPlayerState extends State<MiniPlayer> {
                                           IconButton(
                                               onPressed: () {
                                                 playerMini.playOrPause();
-                                                setState(() {
+                                                
                                                   isPlaying = !isPlaying;
-                                                });
+                                              
                                               },
                                               icon: Icon(
                                                 isPlaying

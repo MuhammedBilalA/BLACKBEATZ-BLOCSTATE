@@ -1,4 +1,5 @@
-import 'dart:developer';
+
+import 'dart:math';
 
 import 'package:black_beatz/domain/fav_db_model/fav_model.dart';
 
@@ -40,7 +41,7 @@ class Fetching {
       // await playlistfetching();
       // await recentfetch();
       // await mostplayedfetch();
-      await notificationFetching();
+      // await notificationFetching();
       return newSongs;
     }
   }
@@ -54,6 +55,23 @@ class Fetching {
     } else {
       return false;
     }
+  }
+
+  Future<bool> notificationFetching() async {
+    bool ret = true;
+    Box<bool> notidb = await Hive.openBox('notification');
+    if (notidb.isEmpty) {
+      // notification = true;
+      ret = true;
+    } else {
+      for (var element in notidb.values) {
+        // notification = element;
+        // return element;
+        ret = element;
+      }
+    }
+
+    return ret;
   }
 
   // fetch songs from device storage after getting permission
@@ -86,39 +104,26 @@ class Fetching {
       // await favFetching();
       // await recentfetch();
       // await mostplayedfetch();
-      await notificationFetching();
+      // await notificationFetching();
 
       return allSongs;
     }
     return [];
   }
 
-  Future notificationFetching() async {
-    Box<bool> notidb = await Hive.openBox('notification');
-    if (notidb.isEmpty) {
-      notification = true;
-    } else {
-      for (var element in notidb.values) {
-        notification = element;
-      }
-    }
-  }
-
-
-
   //Fetching Favorite songs...
   Future<List<Songs>> favFetching() async {
     // List<Songs> newList = [];
     List<Favmodel> favSongCheck = [];
     Box<Favmodel> favdb = await Hive.openBox('favorite');
-    
+
     favSongCheck.addAll(favdb.values);
     for (var favs in favSongCheck) {
       // int count = 0;
       for (var songs in allSongs) {
         if (favs.id == songs.id) {
           favoritelist.insert(0, songs);
-          log(favoritelist.length.toString());
+          // log(favoritelist.length.toString());
 
           // continue;
         } else {
@@ -126,13 +131,13 @@ class Fetching {
         }
       }
       // if (count == allSongs.length) {
-        // var key = favs.key;
-        // await favdb.delete(key);
+      // var key = favs.key;
+      // await favdb.delete(key);
       // }
     }
     // List<Songs> favlist = [];
     // favlist.addAll(favoritelist);
-    log('fav list not bloc ${favoritelist.length}');
+    // log('fav list not bloc ${favoritelist.length}');
 
     // return favlist;
     return favoritelist;

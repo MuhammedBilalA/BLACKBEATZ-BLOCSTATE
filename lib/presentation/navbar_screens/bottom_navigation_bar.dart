@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:black_beatz/application/animation/animation_bloc.dart';
+import 'package:black_beatz/application/nav_bar/nav_bar_bloc.dart';
+import 'package:black_beatz/application/notification/notification_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/songs_db_functions.dart';
 import 'package:black_beatz/presentation/all_songs/all_songs.dart';
 import 'package:black_beatz/core/colors/colors.dart';
@@ -17,21 +20,19 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+class NavBar extends StatelessWidget {
+   NavBar({super.key});
 
-  @override
-  State<NavBar> createState() => _NavBarState();
-}
-
-class _NavBarState extends State<NavBar> {
   int index = 1;
+
   int pressedButtonNo = 1;
+
   final screens = [
     HomeScreen(),
-     AllSongs(),
-     UserScreen(),
+    AllSongs(),
+    UserScreen(),
   ];
+
   final titles = [
     Padding(
       padding: const EdgeInsets.only(top: 5),
@@ -61,11 +62,12 @@ class _NavBarState extends State<NavBar> {
       ),
     ),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColorDark,
-      drawer: drawermethod(),
+      drawer: drawermethod(context),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: appBarBackgroundColor,
@@ -114,40 +116,46 @@ class _NavBarState extends State<NavBar> {
           )
         ],
       ),
-      body: screens[index],
-      bottomNavigationBar: curvedNavBar(),
+      body: BlocBuilder<NavBarBloc, NavBarState>(
+        builder: (context, state) {
+          return screens[state.index];
+        },
+      ),
+      bottomNavigationBar: BlocBuilder<NavBarBloc, NavBarState>(
+        builder: (context, state) {
+          return curvedNavBar(state.index,context);
+        },
+      ),
     );
   }
 
-  CurvedNavigationBar curvedNavBar() {
+  CurvedNavigationBar curvedNavBar(stateIndex,BuildContext context) {
     return CurvedNavigationBar(
-      backgroundColor: transparentColor,
-      color: curvedNavBarColor,
-      index: index,
-      items: [
-        FaIcon(FontAwesomeIcons.houseChimney,
-            color:
-                (pressedButtonNo == 0) ? (whiteColor) : curvedNavBarIconColor),
-        FaIcon(FontAwesomeIcons.indent,
-            color:
-                (pressedButtonNo == 1) ? (whiteColor) : curvedNavBarIconColor),
-        FaIcon(FontAwesomeIcons.userLarge,
-            color:
-                (pressedButtonNo == 2) ? (whiteColor) : curvedNavBarIconColor),
-      ],
-      height: 60,
-      onTap: (index) => setState(() {
-        if (pressedButtonNo != index) {
-          context.read<AnimationBloc>().add(StartEventAnimation(false));
-        }
-        this.index = index;
-        pressedButtonNo = index;
-        
-      }),
-    );
+        backgroundColor: transparentColor,
+        color: curvedNavBarColor,
+        index: index,
+        items: [
+          FaIcon(FontAwesomeIcons.houseChimney,
+              color: (stateIndex == 0) ? (whiteColor) : curvedNavBarIconColor),
+          FaIcon(FontAwesomeIcons.indent,
+              color: (stateIndex == 1) ? (whiteColor) : curvedNavBarIconColor),
+          FaIcon(FontAwesomeIcons.userLarge,
+              color: (stateIndex == 2) ? (whiteColor) : curvedNavBarIconColor),
+        ],
+        height: 60,
+        onTap: (index) {
+          // setState(() {
+          if (pressedButtonNo != index) {
+            context.read<AnimationBloc>().add(StartEventAnimation(false));
+          }
+          this.index = index;
+          pressedButtonNo = index;
+          context.read<NavBarBloc>().add(GetIndex(index: index));
+          // }),}
+        });
   }
 
-  Drawer drawermethod() {
+  Drawer drawermethod( BuildContext context) {
     return Drawer(
       backgroundColor: backgroundColorDark,
       child: Column(
@@ -193,7 +201,7 @@ class _NavBarState extends State<NavBar> {
           ),
           InkWell(
             onTap: () {
-              aboutUs();
+              aboutUs(context);
             },
             child: DrawerlistCustom(
                 title: 'About Us', icon: FontAwesomeIcons.circleInfo),
@@ -222,13 +230,18 @@ class _NavBarState extends State<NavBar> {
                     // fontSize: 16,
                   ),
                 ),
-                Switch(
-                  activeColor: notificationSwitchColor,
-                  value: notification,
-                  onChanged: (value) {
-                    setState(() {
-                      notificationFunction(value);
-                    });
+                BlocBuilder<NotificationBloc, NotificationState>(
+                  builder: (context, state) {
+                    log(state.notification.toString());
+                    return Switch(
+                      activeColor: notificationSwitchColor,
+                      value: state.notification,
+                      onChanged: (value) async {
+                        // setState(() {
+                        await notificationFunction(value, context);
+                        // });
+                      },
+                    );
                   },
                 ),
               ],
@@ -254,7 +267,7 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
-  Future<dynamic> aboutUs() {
+  Future<dynamic> aboutUs(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -416,8 +429,10 @@ class DrawerlistCustom extends StatelessWidget {
   }
 }
 
-notificationFunction(value) async {
-  notification = value;
+notificationFunction(bool value, BuildContext context) async {
+  context.read<NotificationBloc>().add(ChangeNotification(notification: value));
+  // notification = value;
   Box<bool> notidb = await Hive.openBox('notification');
+
   notidb.add(value);
 }

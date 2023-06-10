@@ -78,7 +78,7 @@ class VerticalScroll extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20)),
                       context: context,
                       builder: (context) {
-                        return const MiniPlayer();
+                        return  MiniPlayer();
                       });
                 },
                 child: ListtileCustomWidget(

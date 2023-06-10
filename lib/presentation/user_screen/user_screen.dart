@@ -1,3 +1,4 @@
+import 'package:black_beatz/application/nav_bar/nav_bar_bloc.dart';
 import 'package:black_beatz/main.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/welcome_screens/welcomescreen_2.dart';
@@ -6,18 +7,12 @@ import 'package:black_beatz/presentation/mostly_played/mostly_played.dart';
 import 'package:black_beatz/presentation/playing_screen/mini_player.dart';
 import 'package:black_beatz/presentation/playlist_screens/playlist_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserScreen extends StatefulWidget {
+class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
 
-  @override
-  State<UserScreen> createState() => _UserScreenState();
-}
-
-final usernameFormkey = GlobalKey<FormState>();
-
-class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     if (currentlyplaying != null) {
@@ -25,7 +20,7 @@ class _UserScreenState extends State<UserScreen> {
         showBottomSheet(
             backgroundColor: transparentColor,
             context: context,
-            builder: (context) => const MiniPlayer());
+            builder: (context) => MiniPlayer());
       });
     }
     return Scaffold(
@@ -36,29 +31,33 @@ class _UserScreenState extends State<UserScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 5),
-              child: FutureBuilder(
-                  future: getName(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data == null) {
-                      return const Text(
-                        '',
-                        style: TextStyle(
-                            color: whiteColor,
-                            fontFamily: 'Peddana',
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900),
-                      );
-                    } else {
-                      return Text(
-                        snapshot.data!.toUpperCase(),
-                        style: const TextStyle(
-                            color: whiteColor,
-                            fontFamily: 'Peddana',
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900),
-                      );
-                    }
-                  }),
+              child: BlocBuilder<NavBarBloc, NavBarState>(
+                builder: (context, state) {
+                  return FutureBuilder(
+                      future: getName(),
+                      builder: (context, snapshot) {
+                        if (snapshot.data == null) {
+                          return const Text(
+                            '',
+                            style: TextStyle(
+                                color: whiteColor,
+                                fontFamily: 'Peddana',
+                                fontSize: 30,
+                                fontWeight: FontWeight.w900),
+                          );
+                        } else {
+                          return Text(
+                            snapshot.data!.toUpperCase(),
+                            style: const TextStyle(
+                                color: whiteColor,
+                                fontFamily: 'Peddana',
+                                fontSize: 30,
+                                fontWeight: FontWeight.w900),
+                          );
+                        }
+                      });
+                },
+              ),
             ),
             Center(
               child: Column(
@@ -98,8 +97,8 @@ class _UserScreenState extends State<UserScreen> {
               padding: const EdgeInsets.only(top: 32),
               child: InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (ctx) =>  FavouriteScreen()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => FavouriteScreen()));
                 },
                 child: UserWidgets(
                     image: 'assets/images/oris.png',
@@ -114,8 +113,8 @@ class _UserScreenState extends State<UserScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) =>  PlaylistScreen()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => PlaylistScreen()));
               },
               child: UserWidgets(
                   image: 'assets/images/marshmelllow1.jpg',
@@ -214,7 +213,7 @@ class _UserScreenState extends State<UserScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (usernameFormkey.currentState!.validate()) {
-                        setState(() {});
+                        context.read<NavBarBloc>().add(GetIndex(index: 2));
                         final sharedPrefs =
                             await SharedPreferences.getInstance();
                         await sharedPrefs.setString(
@@ -239,6 +238,8 @@ class _UserScreenState extends State<UserScreen> {
         });
   }
 }
+
+final usernameFormkey = GlobalKey<FormState>();
 
 Future<String> getName() async {
   final sharedPrefs = await SharedPreferences.getInstance();

@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: transparentColor,
             context: context,
             // enableDrag: false,
-            builder: (context) => const MiniPlayer());
+            builder: (context) =>  MiniPlayer());
       });
     }
     return Scaffold(

@@ -11,4 +11,5 @@ class GetFavorite extends FavoriteEvent {
 
 class FetchAllFavorites extends FavoriteEvent{
   
+  
 }

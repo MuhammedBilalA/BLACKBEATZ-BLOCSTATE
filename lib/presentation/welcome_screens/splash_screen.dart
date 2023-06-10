@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
-import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
-import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
 
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 
@@ -14,37 +12,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-List<Songs> allSongs = [];
-
-class _SplashScreenState extends State<SplashScreen> {
   // @override
-  // void initState() {
-  //   Timer(const Duration(seconds: 3, milliseconds: 1500), () async {
-  //     // Fetching fetching = Fetching();
-  //     // await fetching.songfetch();
-  //   });
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Timer(const Duration(seconds: 1, milliseconds: 750), () {
-        context.read<BlackBeatzBloc>().add(GetAllSongs( context: context));
+        context.read<BlackBeatzBloc>().add(GetAllSongs(context: context));
+
         // context.read<FavoriteBloc>().add(FetchAllFavorites());
       });
 
       Timer(const Duration(seconds: 2, milliseconds: 750), () async {
         //     // Fetching fetching = Fetching();
         //     // await fetching.songfetch();\
-        await checkUserLoggedIn();
+        await checkUserLoggedIn(context);
       });
     });
     return SafeArea(
@@ -62,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  gotoLogin() {
+  gotoLogin(BuildContext context) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: ((ctx) => const WelcomeScreen1()),
@@ -70,14 +54,14 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future<void> checkUserLoggedIn() async {
+  Future<void> checkUserLoggedIn(BuildContext context) async {
     final sharedPrefs = await SharedPreferences.getInstance();
     final userLoggedIn = sharedPrefs.getString(saveKeyName);
     if (userLoggedIn == null || userLoggedIn.isEmpty) {
-      gotoLogin();
+      gotoLogin(context);
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: ((ctx1) => const NavBar())));
+          MaterialPageRoute(builder: ((ctx1) =>  NavBar())));
     }
   }
 
@@ -102,3 +86,5 @@ class _SplashScreenState extends State<SplashScreen> {
     log('get recent  songs after');
   }
 }
+
+List<Songs> allSongs = [];
