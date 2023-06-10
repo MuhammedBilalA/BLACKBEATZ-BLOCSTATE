@@ -1,5 +1,4 @@
 import 'package:black_beatz/application/animation/animation_bloc.dart';
-import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
 import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/recent_functions/recent_functions.dart';
@@ -7,7 +6,6 @@ import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
 import 'package:black_beatz/core/widgets/listtilecustom.dart';
-import 'package:black_beatz/presentation/favourite_screens/favourite.dart';
 import 'package:black_beatz/presentation/playing_screen/mini_player.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/player_functions.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/addto_playlist_screen.dart';
@@ -18,14 +16,9 @@ import 'package:on_audio_query/on_audio_query.dart';
 
 List<Songs> recentList = [];
 
-class VerticalScroll extends StatefulWidget {
-  const VerticalScroll({super.key});
+class VerticalScroll extends StatelessWidget {
+  VerticalScroll({super.key});
 
-  @override
-  State<VerticalScroll> createState() => _VerticalScrollState();
-}
-
-class _VerticalScrollState extends State<VerticalScroll> {
   double screenWidth = 0;
 
   @override
@@ -128,76 +121,81 @@ class _VerticalScrollState extends State<VerticalScroll> {
                       );
                     },
                   ),
-                  trailing2: PopupMenuButton(
-                      onSelected: (value) async {
-                        if (value == 0) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) => AddToPlaylist(
-                                    addToPlaylistSong: state.recentList[index],
-                                  )));
-                        } else {
-                          // recentListNotifier.notifyListeners();
-                          List<Songs> returnrecentList =
-                              await recentremove(recentList[index]);
-                          context
-                              .read<RecentBloc>()
-                              .add(GetRecent(recentList: returnrecentList));
-                        }
-                      },
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      color: backgroundColorDark,
-                      icon: const FaIcon(
-                        FontAwesomeIcons.ellipsisVertical,
-                        color: whiteColor,
-                        size: 26,
-                      ),
-                      itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 0,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    'ADD TO PLAYLIST',
-                                    style: TextStyle(
+                  trailing2: BlocBuilder<RecentBloc, RecentState>(
+                    builder: (context, state) {
+                      return PopupMenuButton(
+                          onSelected: (value) async {
+                            if (value == 0) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (ctx) => AddToPlaylist(
+                                        addToPlaylistSong:
+                                            state.recentList[index],
+                                      )));
+                            } else {
+                              // recentListNotifier.notifyListeners();
+                              List<Songs> returnrecentList =
+                                  await recentremove(state.recentList[index]);
+                              context
+                                  .read<RecentBloc>()
+                                  .add(GetRecent(recentList: returnrecentList));
+                            }
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          color: backgroundColorDark,
+                          icon: const FaIcon(
+                            FontAwesomeIcons.ellipsisVertical,
+                            color: whiteColor,
+                            size: 26,
+                          ),
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: 0,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: const [
+                                      Text(
+                                        'ADD TO PLAYLIST',
+                                        style: TextStyle(
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Peddana',
+                                            height: 0.6,
+                                            fontSize: 17),
+                                      ),
+                                      Icon(
+                                        Icons.playlist_add,
                                         color: whiteColor,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Peddana',
-                                        height: 0.6,
-                                        fontSize: 17),
+                                      )
+                                    ],
                                   ),
-                                  Icon(
-                                    Icons.playlist_add,
-                                    color: whiteColor,
-                                  )
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: 1,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    'REMOVE FROM HISTORY',
-                                    style: TextStyle(
+                                ),
+                                PopupMenuItem(
+                                  value: 1,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: const [
+                                      Text(
+                                        'REMOVE FROM HISTORY',
+                                        style: TextStyle(
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Peddana',
+                                            height: 0.6,
+                                            fontSize: 17),
+                                      ),
+                                      Icon(
+                                        Icons.history,
                                         color: whiteColor,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Peddana',
-                                        height: 0.6,
-                                        fontSize: 17),
+                                      )
+                                    ],
                                   ),
-                                  Icon(
-                                    Icons.history,
-                                    color: whiteColor,
-                                  )
-                                ],
-                              ),
-                            )
-                          ]),
+                                )
+                              ]);
+                    },
+                  ),
                 ),
               ),
             ),

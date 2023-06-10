@@ -52,7 +52,7 @@ class _PlayScreenState extends State<PlayScreen> {
         ),
         child: playerMini.builderCurrent(builder: (context, playing) {
           int id = int.parse(playing.audio.audio.metas.id!);
-          currentsongFinder(id, context);
+          currentsongFinder(id,context);
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -214,10 +214,11 @@ class _PlayScreenState extends State<PlayScreen> {
                                 width: 70,
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                      begin: Alignment.topRight,
-                                      end: Alignment.centerLeft,
-                                      transform: GradientRotation(8),
-                                      colors: playOrPauseGradient),
+                                    begin: Alignment.topRight,
+                                    end: Alignment.centerLeft,
+                                    transform: GradientRotation(8),
+                                    colors:playOrPauseGradient
+                                  ),
                                   borderRadius: BorderRadius.circular(40),
                                   color: playScreenProgressBarColor,
                                 ),
@@ -272,9 +273,10 @@ class _PlayScreenState extends State<PlayScreen> {
                         )
                       ],
                       gradient: const LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: playScreenLastContainerGradient),
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: playScreenLastContainerGradient
+                      ),
                       borderRadius: BorderRadius.circular(30)),
                   child: Row(
                     children: [
@@ -340,11 +342,12 @@ class _PlayScreenState extends State<PlayScreen> {
                               ),
                       ),
                       const Spacer(
-                        flex: 1,
+                        flex: 1,git
                       ),
                       Hearticon(
                         currentSong: currentlyplaying!,
                         isfav: favoritelist.contains(currentlyplaying),
+                      
                       ),
                       const Spacer(
                         flex: 1,
