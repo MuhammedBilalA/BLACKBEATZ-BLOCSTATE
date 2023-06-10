@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
@@ -38,6 +41,9 @@ class BlackBeatz extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
+  
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -48,8 +54,10 @@ class BlackBeatz extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => FavoriteBloc(),
+        ),
+        BlocProvider(
+          create: (context) => RecentBloc(),
         )
-        ,BlocProvider(create: (context) => RecentBloc(),)
       ],
       child: MaterialApp(
         theme: ThemeData(primarySwatch: blueColor),
@@ -58,4 +66,6 @@ class BlackBeatz extends StatelessWidget {
       ),
     );
   }
+
+  
 }

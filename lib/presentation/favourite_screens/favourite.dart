@@ -133,7 +133,7 @@ class FavouriteScreen extends StatelessWidget {
                 ),
               ),
               trailing1: Hearticon(
-                refresh: true,
+               
                 currentSong: state.favoritelist[index],
                 isfav: true,
               ),

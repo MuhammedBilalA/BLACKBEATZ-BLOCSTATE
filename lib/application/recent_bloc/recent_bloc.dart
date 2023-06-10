@@ -22,10 +22,7 @@ class RecentBloc extends Bloc<RecentEvent, RecentState> {
 
     on<GetRecent>(
       (event, emit) async {
-        // log('GetRecent state.allsongs:----${state.allSongs.length}');
-        // log('GetRecent event.favoriteList:----${state.favoritelist.length}');
-        // log('GetRecent state.mostPlayedList:----${state.mostPlayedList.length}');
-        // log('GetRecent state.playList:----${state.playList.length}');
+
         log('GetRecent event.recentList:----${event.recentList.length}');
 
         return emit(RecentState(recentList: event.recentList));

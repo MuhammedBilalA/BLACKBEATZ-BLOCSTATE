@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
 import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
@@ -23,25 +24,29 @@ class SplashScreen extends StatefulWidget {
 List<Songs> allSongs = [];
 
 class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    context.read<BlackBeatzBloc>().add(GetAllSongs());
-
-    context.read<FavoriteBloc>().add(FetchAllFavorites());
-    context.read<RecentBloc>().add(GetRcent());
-
-    Timer(const Duration(seconds: 3, milliseconds: 500), () async {
-      // Fetching fetching = Fetching();
-      // await fetching.songfetch();
-
-      checkUserLoggedIn();
-    });
-
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   Timer(const Duration(seconds: 3, milliseconds: 1500), () async {
+  //     // Fetching fetching = Fetching();
+  //     // await fetching.songfetch();
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Timer(const Duration(seconds: 1, milliseconds: 750), () {
+        context.read<BlackBeatzBloc>().add(GetAllSongs( context: context));
+        // context.read<FavoriteBloc>().add(FetchAllFavorites());
+      });
+
+      Timer(const Duration(seconds: 2, milliseconds: 750), () async {
+        //     // Fetching fetching = Fetching();
+        //     // await fetching.songfetch();\
+        await checkUserLoggedIn();
+      });
+    });
     return SafeArea(
       child: Scaffold(
         backgroundColor: backgroundColorDark,
@@ -74,5 +79,26 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((ctx1) => const NavBar())));
     }
+  }
+
+  Future fetchBloc(BuildContext context) async {
+    log('get all songs before');
+    Timer(
+        const Duration(
+          seconds: 1,
+        ),
+        () {});
+    log('get all songs after');
+    log('get fav songs before');
+    Timer(
+        const Duration(
+          seconds: 1,
+        ),
+        () {});
+    log('get fav songs after');
+    log('get recent  songs before');
+    // Timer(const Duration(seconds: 1,), () {
+    // });
+    log('get recent  songs after');
   }
 }

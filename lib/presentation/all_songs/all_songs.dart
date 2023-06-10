@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
@@ -16,38 +18,25 @@ import 'package:on_audio_query/on_audio_query.dart';
 
 ValueNotifier allsongBodyNotifier = ValueNotifier([]);
 
-class AllSongs extends StatefulWidget {
-  const AllSongs({super.key});
+class AllSongs extends StatelessWidget {
+   AllSongs({super.key});
 
-  @override
-  State<AllSongs> createState() => _AllSongsState();
-}
-
-class _AllSongsState extends State<AllSongs> {
   double screenWidth = 0;
-  //  late bool startAnimation ;
 
   @override
   Widget build(BuildContext context) {
-    // context.read<BlackBeatzBloc>().add(GetAllSongs());
     context.read<AnimationBloc>().add(StartEventAnimation(true));
-    // context.read<BlackBeatzBloc>().add(GetAllSongs());
 
     screenWidth = MediaQuery.of(context).size.width;
 
-    if (currentlyplaying != null) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        showBottomSheet(
-            backgroundColor: transparentColor,
-            context: context,
-            builder: (context) => const MiniPlayer());
-      });
-    }
+    // if (currentlyplaying != null) {
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+    //   });
+    // }
 
     return BlocBuilder<AnimationBloc, AnimationState>(
       builder: (context, state) {
-        // startAnimation = state.startAnimation;
-
         return Scaffold(
           backgroundColor: backgroundColorDark,
           body: ValueListenableBuilder(
@@ -81,8 +70,10 @@ class _AllSongsState extends State<AllSongs> {
                 child: InkWell(
                   onTap: () async {
                     playingAudio(state.allSongs, index);
-                    // allsongBodyNotifier.notifyListeners();
-                    setState(() {});
+                    showBottomSheet(
+                        backgroundColor: transparentColor,
+                        context: context,
+                        builder: (context) => const MiniPlayer());
                   },
                   child: ListtileCustomWidget(
                     index: index,
@@ -114,13 +105,15 @@ class _AllSongsState extends State<AllSongs> {
                         ),
                       ),
                     ),
-                    trailing1:
-                        Hearticon(
+                    trailing1: BlocBuilder<FavoriteBloc, FavoriteState>(
+                      builder: (context, statee) {
+                        return Hearticon(
                           currentSong: state.allSongs[index],
-                          isfav: favoritelist.contains(state.allSongs[index]),
-                        ),
-                     
-                     
+                          isfav: statee.favoritelist
+                              .contains(state.allSongs[index]),
+                        );
+                      },
+                    ),
                     trailing2: PopupMenuButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),

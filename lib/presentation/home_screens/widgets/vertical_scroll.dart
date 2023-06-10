@@ -1,7 +1,6 @@
-
-
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
 import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/recent_functions/recent_functions.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
@@ -36,7 +35,6 @@ class _VerticalScrollState extends State<VerticalScroll> {
     screenWidth = MediaQuery.of(context).size.width;
     return BlocBuilder<AnimationBloc, AnimationState>(
       builder: (context, stateanimation) {
-        
         return SingleChildScrollView(
           child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
@@ -121,9 +119,14 @@ class _VerticalScrollState extends State<VerticalScroll> {
                       ),
                     ),
                   ),
-                  trailing1: Hearticon(
-                    currentSong: state.recentList[index],
-                    isfav: favoritelist.contains(state.recentList[index]),
+                  trailing1: BlocBuilder<FavoriteBloc, FavoriteState>(
+                    builder: (context, favState) {
+                      return Hearticon(
+                        currentSong: state.recentList[index],
+                        isfav: favState.favoritelist
+                            .contains(state.recentList[index]),
+                      );
+                    },
                   ),
                   trailing2: PopupMenuButton(
                       onSelected: (value) async {

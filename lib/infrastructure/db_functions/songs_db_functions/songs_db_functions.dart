@@ -31,6 +31,7 @@ class Fetching {
       List<Songs> newSong = await fetchFromDevice();
       return newSong;
     } else {
+      allSongs.clear();
       allSongs.addAll(songdb.values);
       List<Songs> newSongs = [];
       newSongs.addAll(songdb.values);
@@ -103,28 +104,31 @@ class Fetching {
     }
   }
 
+
+
   //Fetching Favorite songs...
   Future<List<Songs>> favFetching() async {
-    List<Songs> newList = [];
+    // List<Songs> newList = [];
     List<Favmodel> favSongCheck = [];
     Box<Favmodel> favdb = await Hive.openBox('favorite');
+    
     favSongCheck.addAll(favdb.values);
     for (var favs in favSongCheck) {
-      int count = 0;
+      // int count = 0;
       for (var songs in allSongs) {
         if (favs.id == songs.id) {
           favoritelist.insert(0, songs);
           log(favoritelist.length.toString());
 
-          continue;
+          // continue;
         } else {
-          count++;
+          // count++;
         }
       }
-      if (count == allSongs.length) {
-        var key = favs.key;
-        await favdb.delete(key);
-      }
+      // if (count == allSongs.length) {
+        // var key = favs.key;
+        // await favdb.delete(key);
+      // }
     }
     // List<Songs> favlist = [];
     // favlist.addAll(favoritelist);

@@ -6,6 +6,5 @@ class RecentState {
 }
 
 class RecentInitial extends RecentState {
-  RecentInitial():super(recentList: []);
-  
+  RecentInitial() : super(recentList: []);
 }

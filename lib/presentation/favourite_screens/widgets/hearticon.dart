@@ -10,33 +10,27 @@ import 'package:black_beatz/core/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Hearticon extends StatefulWidget {
+class Hearticon extends StatelessWidget {
   Songs currentSong;
   bool isfav;
-  bool? refresh;
+  
   Hearticon(
       {super.key,
       required this.currentSong,
       required this.isfav,
-      this.refresh});
+      });
 
-  @override
-  State<Hearticon> createState() => _HearticonState();
-}
-
-class _HearticonState extends State<Hearticon> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FavoriteBloc, FavoriteState>(
       builder: (context, state) {
         return InkWell(
             onTap: () async {
-              // setState(()async {
-              if (widget.isfav) {
-                widget.isfav = false;
+              if (isfav) {
+                isfav = false;
 
                 List<Songs> returnList =
-                    await removeFavourite(widget.currentSong);
+                    await removeFavourite(currentSong);
 
                 context
                     .read<FavoriteBloc>()
@@ -45,9 +39,9 @@ class _HearticonState extends State<Hearticon> {
                 snackbarRemoving(
                     text: 'Removed From Favourite', context: context);
               } else {
-                widget.isfav = true;
+                isfav = true;
 
-                List<Songs> returnList = await addFavourite(widget.currentSong);
+                List<Songs> returnList = await addFavourite(currentSong);
                 context
                     .read<FavoriteBloc>()
                     .add(GetFavorite(favoriteList: returnList));
@@ -56,17 +50,10 @@ class _HearticonState extends State<Hearticon> {
                    log('adding fav returnList  ${returnList.length}');
                 snackbarAdding(text: 'Added To Favourite', context: context);
               }
-              if (widget.refresh != null) {
-                // favoritelist.notifyListeners();
-                // allsongBodyNotifier.notifyListeners();
-                // homeScreenNotifier.notifyListeners();
-                // recentListNotifier.notifyListeners();
-                // plusiconNotifier.notifyListeners();
-                // data.notifyListeners();
-              }
-              // });
+             
+              
             },
-            child: (widget.isfav)
+            child: (isfav)
                 ? const Icon(
                     Icons.favorite_sharp,
                     size: 33,
