@@ -1,6 +1,7 @@
 import 'package:black_beatz/application/animation/animation_bloc.dart';
-import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
-import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
+import 'package:black_beatz/application/favorite/favorite_bloc.dart';
+import 'package:black_beatz/application/recent/recent_bloc.dart';
+
 import 'package:black_beatz/infrastructure/db_functions/recent_functions/recent_functions.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
@@ -78,7 +79,7 @@ class VerticalScroll extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20)),
                       context: context,
                       builder: (context) {
-                        return  MiniPlayer();
+                        return MiniPlayer();
                       });
                 },
                 child: ListtileCustomWidget(

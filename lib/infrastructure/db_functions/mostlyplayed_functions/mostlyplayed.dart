@@ -1,19 +1,25 @@
+import 'dart:developer';
+
+import 'package:black_beatz/application/mostly_played/mostly_played_bloc.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/presentation/welcome_screens/splash_screen.dart';
 import 'package:black_beatz/presentation/mostly_played/mostly_played.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 // -----adding to mostly playeddb
-mostlyPlayedaddTodb(int id) async {
+mostlyPlayedaddTodb(int id, BuildContext context) async {
   Box<int> mostplayeddb = await Hive.openBox('mostplayed');
   int count = mostplayeddb.get(id)!;
   mostplayeddb.put(id, count + 1);
-  await mostlyplayedaddtolist();
+  await mostlyplayedaddtolist(context);
 }
 
 // mostly played list refreshing ----
 
-mostlyplayedaddtolist() async {
+Future mostlyplayedaddtolist(BuildContext context) async {
+
   Box<int> mostplayedDb = await Hive.openBox('mostplayed');
   mostPlayedList.clear();
 
@@ -42,6 +48,10 @@ mostlyplayedaddtolist() async {
     for (Songs song in allSongs) {
       if (element[0] == song.id && element[1] > 3) {
         mostPlayedList.add(song);
+        
+        context
+            .read<MostlyPlayedBloc>()
+            .add(AddToMostly(mostly: mostPlayedList));
       }
     }
   }

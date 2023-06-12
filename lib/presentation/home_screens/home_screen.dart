@@ -1,4 +1,5 @@
-import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
+import 'package:black_beatz/application/recent/recent_bloc.dart';
+
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/home_screens/widgets/vertical_scroll.dart';
 import 'package:black_beatz/presentation/playing_screen/mini_player.dart';
@@ -15,14 +16,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     if (currentlyplaying != null) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         showBottomSheet(
             backgroundColor: transparentColor,
             context: context,
             // enableDrag: false,
-            builder: (context) =>  MiniPlayer());
+            builder: (context) => MiniPlayer());
       });
     }
     return Scaffold(

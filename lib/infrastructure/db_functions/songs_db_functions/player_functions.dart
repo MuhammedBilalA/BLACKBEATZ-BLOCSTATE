@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
-import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
+import 'package:black_beatz/application/recent/recent_bloc.dart';
+
 import 'package:black_beatz/infrastructure/db_functions/recent_functions/recent_functions.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/songs_db_functions.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';

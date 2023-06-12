@@ -1,5 +1,10 @@
+import 'dart:developer';
 
-import 'dart:math';
+import 'package:black_beatz/application/favorite/favorite_bloc.dart';
+import 'package:black_beatz/application/mostly_played/mostly_played_bloc.dart';
+import 'package:black_beatz/application/notification/notification_bloc.dart';
+import 'package:black_beatz/application/playlist/playlist_bloc.dart';
+import 'package:black_beatz/application/recent/recent_bloc.dart';
 
 import 'package:black_beatz/domain/fav_db_model/fav_model.dart';
 
@@ -13,7 +18,8 @@ import 'package:black_beatz/presentation/home_screens/widgets/vertical_scroll.da
 import 'package:black_beatz/presentation/mostly_played/mostly_played.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_class.dart';
 import 'package:black_beatz/presentation/playlist_screens/playlist_screen.dart';
-import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_unique_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -25,17 +31,25 @@ bool notification = true;
 class Fetching {
   final OnAudioQuery audioQuery = OnAudioQuery();
 
-  Future<List<Songs>> songfetch() async {
+  Future<List<Songs>> songfetch(BuildContext context) async {
     Box<Songs> songdb = await Hive.openBox('allsongsdb');
 
     if (songdb.isEmpty) {
       List<Songs> newSong = await fetchFromDevice();
+      // context.read<MostlyPlayedBloc>().add(GetMostlyPlayed());
+
       return newSong;
     } else {
       allSongs.clear();
       allSongs.addAll(songdb.values);
       List<Songs> newSongs = [];
       newSongs.addAll(songdb.values);
+
+      context.read<FavoriteBloc>().add(FetchAllFavorites());
+      context.read<RecentBloc>().add(GetRcent());
+      context.read<NotificationBloc>().add(GetNotification());
+      context.read<PlaylistBloc>().add(GetPlaylist());
+      context.read<MostlyPlayedBloc>().add(GetMostlyPlayed());
 
       // await favFetching();
       // await playlistfetching();
@@ -165,6 +179,7 @@ class Fetching {
   //Fetching playlist ...
   Future<List<EachPlaylist>> playlistfetching() async {
     Box<PlaylistClass> playlistdb = await Hive.openBox('playlist');
+    List<EachPlaylist> eachPlaylistList = [];
 
     for (PlaylistClass elements in playlistdb.values) {
       String playlistName = elements.playlistName;
@@ -178,9 +193,12 @@ class Fetching {
         }
       }
       playListNotifier.insert(0, playlistFetch);
+      eachPlaylistList.insert(0, playlistFetch);
     }
-    List<EachPlaylist> eachPlaylistList = [];
-    eachPlaylistList.addAll(playListNotifier);
+    // eachPlaylistList.addAll(playListNotifier);
+
+    log('-----------------------------${eachPlaylistList.length}');
+
     return eachPlaylistList;
   }
 

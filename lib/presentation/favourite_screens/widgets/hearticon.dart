@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/favorite/favorite_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/fav_db_functions/fav_functions.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 
@@ -13,12 +13,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class Hearticon extends StatelessWidget {
   Songs currentSong;
   bool isfav;
-  
-  Hearticon(
-      {super.key,
-      required this.currentSong,
-      required this.isfav,
-      });
+
+  Hearticon({
+    super.key,
+    required this.currentSong,
+    required this.isfav,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +29,7 @@ class Hearticon extends StatelessWidget {
               if (isfav) {
                 isfav = false;
 
-                List<Songs> returnList =
-                    await removeFavourite(currentSong);
+                List<Songs> returnList = await removeFavourite(currentSong);
 
                 context
                     .read<FavoriteBloc>()
@@ -46,12 +45,10 @@ class Hearticon extends StatelessWidget {
                     .read<FavoriteBloc>()
                     .add(GetFavorite(favoriteList: returnList));
 
-                   log('adding fav state.favoritelist  ${state.favoritelist.length}');
-                   log('adding fav returnList  ${returnList.length}');
+                log('adding fav state.favoritelist  ${state.favoritelist.length}');
+                log('adding fav returnList  ${returnList.length}');
                 snackbarAdding(text: 'Added To Favourite', context: context);
               }
-             
-              
             },
             child: (isfav)
                 ? const Icon(

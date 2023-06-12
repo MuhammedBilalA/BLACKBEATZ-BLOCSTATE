@@ -1,4 +1,4 @@
-import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/favorite/favorite_bloc.dart';
 import 'package:black_beatz/application/search/search_bloc.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
@@ -161,7 +161,8 @@ class SearchScreen extends StatelessWidget {
                   builder: (context, statee) {
                     return Hearticon(
                       currentSong: state.searchList[index],
-                      isfav: statee.favoritelist.contains(state.searchList[index]),
+                      isfav:
+                          statee.favoritelist.contains(state.searchList[index]),
                     );
                   },
                 ),

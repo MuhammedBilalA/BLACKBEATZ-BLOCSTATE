@@ -1,10 +1,12 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:black_beatz/application/mostly_played/mostly_played_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/mostlyplayed_functions/mostlyplayed.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/playing_screen/play_screen.dart';
 import 'package:black_beatz/infrastructure/db_functions/songs_db_functions/player_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:marquee/marquee.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -14,7 +16,7 @@ Songs? currentlyplaying;
 List<Audio> playinglistAudio = [];
 
 class MiniPlayer extends StatelessWidget {
-   MiniPlayer({super.key});
+  MiniPlayer({super.key});
 
   bool miniplayerDone = true;
 
@@ -25,7 +27,7 @@ class MiniPlayer extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) =>  PlayScreen()));
+            .push(MaterialPageRoute(builder: (context) => PlayScreen()));
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8, bottom: 3),
@@ -50,7 +52,7 @@ class MiniPlayer extends StatelessWidget {
               child: playerMini.builderCurrent(
                 builder: (context, playing) {
                   int id = int.parse(playing.audio.audio.metas.id!);
-                  currentsongFinder(id,context);
+                  currentsongFinder(id, context);
                   return Column(
                     children: [
                       Row(
@@ -147,9 +149,8 @@ class MiniPlayer extends StatelessWidget {
                                           IconButton(
                                               onPressed: () {
                                                 playerMini.playOrPause();
-                                                
-                                                  isPlaying = !isPlaying;
-                                              
+
+                                                isPlaying = !isPlaying;
                                               },
                                               icon: Icon(
                                                 isPlaying
@@ -213,9 +214,12 @@ class MiniPlayer extends StatelessWidget {
                                                 currentposvalue / totalvalue;
                                             if (!isEnteredToMostlyPlayed &&
                                                 value > 0.5) {
-                                              int id = int.parse(playing
-                                                  .audio.audio.metas.id!);
-                                              mostlyPlayedaddTodb(id);
+                                              // int id = int.parse(playing
+                                              //     .audio.audio.metas.id!);
+
+                                              // mostlyPlayedaddTodb(
+                                              //           id,context);
+
                                               isEnteredToMostlyPlayed = true;
                                             }
                                             return LinearProgressIndicator(

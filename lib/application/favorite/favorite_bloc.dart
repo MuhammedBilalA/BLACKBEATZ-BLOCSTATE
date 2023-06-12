@@ -24,5 +24,9 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
 
       return emit(FavoriteState(favoritelist: event.favoriteList));
     });
+
+
+
+    
   }
 }

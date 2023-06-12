@@ -1,12 +1,14 @@
-import 'dart:async';
-import 'dart:developer';
+
 
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
-import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/favorite/favorite_bloc.dart';
+import 'package:black_beatz/application/mostly_played/mostly_played_bloc.dart';
 import 'package:black_beatz/application/nav_bar/nav_bar_bloc.dart';
 import 'package:black_beatz/application/notification/notification_bloc.dart';
-import 'package:black_beatz/application/recent_bloc/recent_bloc.dart';
+import 'package:black_beatz/application/playlist/playlist_bloc.dart';
+import 'package:black_beatz/application/recent/recent_bloc.dart';
+
 import 'package:black_beatz/application/repeat/repeat_bloc.dart';
 import 'package:black_beatz/application/search/search_bloc.dart';
 import 'package:black_beatz/application/shuffle/shuffle_bloc.dart';
@@ -47,8 +49,6 @@ class BlackBeatz extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
 
-  
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -77,6 +77,12 @@ class BlackBeatz extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => SearchBloc(),
+        ),
+        BlocProvider(
+          create: (context) => PlaylistBloc(),
+        ),
+        BlocProvider(
+          create: (context) => MostlyPlayedBloc(),
         )
       ],
       child: MaterialApp(
@@ -86,6 +92,4 @@ class BlackBeatz extends StatelessWidget {
       ),
     );
   }
-
-  
 }

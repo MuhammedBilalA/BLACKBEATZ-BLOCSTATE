@@ -1,5 +1,4 @@
-
-import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/favorite/favorite_bloc.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
@@ -21,8 +20,6 @@ class FavouriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
-
     return BlocBuilder<FavoriteBloc, FavoriteState>(
       builder: (context, state) {
         return Scaffold(
@@ -100,7 +97,7 @@ class FavouriteScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20)),
                   context: context,
                   builder: (context) {
-                    return  MiniPlayer();
+                    return MiniPlayer();
                   });
             },
             child: ListtileCustomWidget(
@@ -133,7 +130,6 @@ class FavouriteScreen extends StatelessWidget {
                 ),
               ),
               trailing1: Hearticon(
-               
                 currentSong: state.favoritelist[index],
                 isfav: true,
               ),

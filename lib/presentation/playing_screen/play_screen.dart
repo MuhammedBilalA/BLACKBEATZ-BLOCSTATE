@@ -1,8 +1,10 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:black_beatz/application/favorite_bloc/favorite_bloc.dart';
+import 'package:black_beatz/application/favorite/favorite_bloc.dart';
+import 'package:black_beatz/application/mostly_played/mostly_played_bloc.dart';
 import 'package:black_beatz/application/repeat/repeat_bloc.dart';
 import 'package:black_beatz/application/shuffle/shuffle_bloc.dart';
+import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/infrastructure/db_functions/mostlyplayed_functions/mostlyplayed.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
@@ -137,8 +139,8 @@ class PlayScreen extends StatelessWidget {
                     double value = currentposvalue / totalvalue;
                     if (!isEnteredToMostlyPlayed && value > 0.5) {
                       int id = int.parse(playing.audio.audio.metas.id!);
-                      mostlyPlayedaddTodb(id);
-                      isEnteredToMostlyPlayed = true;
+
+                      mostlyPlayedaddTodb(id, context);
                     }
 
                     return ProgressBar(
@@ -278,7 +280,6 @@ class PlayScreen extends StatelessWidget {
                         builder: (context, state) {
                           return InkWell(
                             onTap: () {
-                            
                               if (state.repeat == false) {
                                 context
                                     .read<RepeatBloc>()

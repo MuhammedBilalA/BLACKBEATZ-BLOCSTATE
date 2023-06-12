@@ -1,7 +1,6 @@
-import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
+import 'package:black_beatz/application/playlist/playlist_bloc.dart';
 import 'package:black_beatz/infrastructure/db_functions/playlist_functions/playlist_function.dart';
 import 'package:black_beatz/core/colors/colors.dart';
-import 'package:black_beatz/main.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_class.dart';
 import 'package:black_beatz/presentation/playlist_screens/widgets/playlist_unique_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +11,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class PlaylistScreen extends StatelessWidget {
   PlaylistScreen({super.key});
 
-  double screenWidth = 0;
-
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
+    // context.read<PlaylistBloc>().add(SearchPlaylist(query: '',each: ));
+
     return Scaffold(
         backgroundColor: backgroundColorLight,
         appBar: AppBar(
@@ -53,7 +51,7 @@ class PlaylistScreen extends StatelessWidget {
         ),
 
         // --------------------------------Body Starting------------------------
-        body: BlocBuilder<BlackBeatzBloc, BlackBeatzState>(
+        body: BlocBuilder<PlaylistBloc, PlaylistState>(
           builder: (context, state) {
             return (state.playList.isEmpty)
                 ? emptyPlaylist()
@@ -271,9 +269,8 @@ class PlaylistScreen extends StatelessWidget {
                       if (playlistFormkey.currentState!.validate()) {
                         List<EachPlaylist> playlistCreatingList =
                             await playlistCreating(playlistControllor.text);
-                        context
-                            .read<BlackBeatzBloc>()
-                            .add(GetPlaylist(playlist: playlistCreatingList));
+                        context.read<PlaylistBloc>().add(
+                            PlaylistEventClass(playList: playlistCreatingList));
 
                         playlistControllor.text = '';
                         Navigator.of(ctx).pop();
@@ -332,8 +329,8 @@ class PlaylistScreen extends StatelessWidget {
                       List<EachPlaylist> playlistr =
                           await playlistdelete(index);
                       context
-                          .read<BlackBeatzBloc>()
-                          .add(GetPlaylist(playlist: playlistr));
+                          .read<PlaylistBloc>()
+                          .add(PlaylistEventClass(playList: playlistr));
                       Navigator.of(context).pop();
 
                       // playlistBodyNotifier.notifyListeners();
