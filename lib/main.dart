@@ -1,5 +1,3 @@
-
-
 import 'package:black_beatz/application/animation/animation_bloc.dart';
 import 'package:black_beatz/application/blackbeatz/blackbeatz_bloc.dart';
 import 'package:black_beatz/application/favorite/favorite_bloc.dart';
@@ -9,9 +7,9 @@ import 'package:black_beatz/application/notification/notification_bloc.dart';
 import 'package:black_beatz/application/playlist/playlist_bloc.dart';
 import 'package:black_beatz/application/recent/recent_bloc.dart';
 
-import 'package:black_beatz/application/repeat/repeat_bloc.dart';
+import 'package:black_beatz/application/repeat_cubit/repeat_cubit.dart';
 import 'package:black_beatz/application/search/search_bloc.dart';
-import 'package:black_beatz/application/shuffle/shuffle_bloc.dart';
+import 'package:black_beatz/application/shuffle_cubit/shuffle_cubit_cubit.dart';
 import 'package:black_beatz/domain/playlist_model/playlist_model.dart';
 import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
 import 'package:black_beatz/core/colors/colors.dart';
@@ -63,12 +61,7 @@ class BlackBeatz extends StatelessWidget {
         BlocProvider(
           create: (context) => RecentBloc(),
         ),
-        BlocProvider(
-          create: (context) => RepeatBloc(),
-        ),
-        BlocProvider(
-          create: (context) => ShuffleBloc(),
-        ),
+       
         BlocProvider(
           create: (context) => NavBarBloc(),
         ),
@@ -83,6 +76,12 @@ class BlackBeatz extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => MostlyPlayedBloc(),
+        ),
+        BlocProvider(
+          create: (context) => RepeatCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ShuffleCubit(),
         )
       ],
       child: MaterialApp(

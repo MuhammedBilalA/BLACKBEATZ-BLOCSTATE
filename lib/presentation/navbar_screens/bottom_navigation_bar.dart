@@ -21,7 +21,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NavBar extends StatelessWidget {
-   NavBar({super.key});
+  NavBar({super.key});
 
   int index = 1;
 
@@ -93,8 +93,8 @@ class NavBar extends StatelessWidget {
                   },
                 );
                 Timer(const Duration(seconds: 2), () async {
-                  Fetching fetch = Fetching();
-                  await fetch.refreshAllSongs(context);
+                  // Fetching fetch = Fetching();
+                  // await fetch.refreshAllSongs(context);
                   Navigator.of(context).pop();
                 });
               },
@@ -123,13 +123,13 @@ class NavBar extends StatelessWidget {
       ),
       bottomNavigationBar: BlocBuilder<NavBarBloc, NavBarState>(
         builder: (context, state) {
-          return curvedNavBar(state.index,context);
+          return curvedNavBar(state.index, context);
         },
       ),
     );
   }
 
-  CurvedNavigationBar curvedNavBar(stateIndex,BuildContext context) {
+  CurvedNavigationBar curvedNavBar(stateIndex, BuildContext context) {
     return CurvedNavigationBar(
         backgroundColor: transparentColor,
         color: curvedNavBarColor,
@@ -155,7 +155,7 @@ class NavBar extends StatelessWidget {
         });
   }
 
-  Drawer drawermethod( BuildContext context) {
+  Drawer drawermethod(BuildContext context) {
     return Drawer(
       backgroundColor: backgroundColorDark,
       child: Column(

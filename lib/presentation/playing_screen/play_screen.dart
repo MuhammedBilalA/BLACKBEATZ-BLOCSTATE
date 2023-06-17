@@ -1,10 +1,8 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:black_beatz/application/favorite/favorite_bloc.dart';
-import 'package:black_beatz/application/mostly_played/mostly_played_bloc.dart';
-import 'package:black_beatz/application/repeat/repeat_bloc.dart';
-import 'package:black_beatz/application/shuffle/shuffle_bloc.dart';
-import 'package:black_beatz/domain/songs_db_model/songs_db_model.dart';
+import 'package:black_beatz/application/repeat_cubit/repeat_cubit.dart';
+import 'package:black_beatz/application/shuffle_cubit/shuffle_cubit_cubit.dart';
 import 'package:black_beatz/infrastructure/db_functions/mostlyplayed_functions/mostlyplayed.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/presentation/favourite_screens/widgets/hearticon.dart';
@@ -276,21 +274,27 @@ class PlayScreen extends StatelessWidget {
                       const Spacer(
                         flex: 2,
                       ),
-                      BlocBuilder<RepeatBloc, RepeatState>(
+                      BlocBuilder<RepeatCubit, RepeatCubitState>(
                         builder: (context, state) {
                           return InkWell(
                             onTap: () {
                               if (state.repeat == false) {
+                                // context
+                                //     .read<RepeatBloc>()
+                                //     .add(GetRepeat(repeat: true));
                                 context
-                                    .read<RepeatBloc>()
-                                    .add(GetRepeat(repeat: true));
+                                    .read<RepeatCubit>()
+                                    .getRepeatCubit(true);
                                 playerMini.setLoopMode(LoopMode.single);
                                 snackbarAdding(
                                     text: 'Added To Repeat', context: context);
                               } else {
+                                // context
+                                //     .read<RepeatBloc>()
+                                //     .add(GetRepeat(repeat: false));
                                 context
-                                    .read<RepeatBloc>()
-                                    .add(GetRepeat(repeat: false));
+                                    .read<RepeatCubit>()
+                                    .getRepeatCubit(false);
                                 playerMini.setLoopMode(LoopMode.playlist);
                                 snackbarRemoving(
                                     text: 'Removed From Repeat',
@@ -312,21 +316,24 @@ class PlayScreen extends StatelessWidget {
                       const Spacer(
                         flex: 1,
                       ),
-                      BlocBuilder<ShuffleBloc, ShuffleState>(
+                      BlocBuilder<ShuffleCubit, ShuffleCubitState>(
                         builder: (context, state) {
                           return InkWell(
                             onTap: () {
                               if (state.shuffle == false) {
-                                context
-                                    .read<ShuffleBloc>()
-                                    .add(GetShuffle(shuffle: true));
+                                // context
+                                //     .read<ShuffleBloc>()
+                                //     .add(GetShuffle(shuffle: true));
+                                context.read<ShuffleCubit>().GetShuffle(true);
                                 playerMini.toggleShuffle();
                                 snackbarAdding(
                                     text: 'Added To Shuffle', context: context);
                               } else {
-                                context
-                                    .read<ShuffleBloc>()
-                                    .add(GetShuffle(shuffle: false));
+                                // context
+                                //     .read<ShuffleBloc>()
+                                //     .add(GetShuffle(shuffle: false));
+                                context.read<ShuffleCubit>().GetShuffle(false);
+
                                 playerMini.toggleShuffle();
                                 snackbarRemoving(
                                     text: 'Removed From Shuffle',

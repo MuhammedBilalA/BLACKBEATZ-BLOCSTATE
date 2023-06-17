@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'widgets/horizontal_scroll.dart';
 
-ValueNotifier homeScreenNotifier = ValueNotifier([]);
+// ValueNotifier homeScreenNotifier = ValueNotifier([]);
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -27,9 +27,7 @@ class HomeScreen extends StatelessWidget {
     }
     return Scaffold(
         backgroundColor: backgroundColorDark,
-        body: ValueListenableBuilder(
-          valueListenable: homeScreenNotifier,
-          builder: (context, value, child) => SingleChildScrollView(
+        body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -39,7 +37,7 @@ class HomeScreen extends StatelessWidget {
                 VerticalScroll(),
               ],
             ),
-          ),
+          
         ));
   }
 }

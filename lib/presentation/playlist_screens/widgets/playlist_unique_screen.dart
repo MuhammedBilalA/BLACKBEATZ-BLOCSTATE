@@ -1,3 +1,4 @@
+import 'package:black_beatz/application/favorite/favorite_bloc.dart';
 import 'package:black_beatz/application/playlist/playlist_bloc.dart';
 import 'package:black_beatz/core/colors/colors.dart';
 import 'package:black_beatz/core/widgets/listtilecustom.dart';
@@ -154,9 +155,13 @@ class PlaylistUniqueScreen extends StatelessWidget {
         "${playlist.container[index].artist}",
         style: const TextStyle(color: whiteColor),
       ),
-      trailing1: Hearticon(
-        currentSong: playlist.container[index],
-        isfav: favoritelist.contains(playlist.container[index]),
+      trailing1: BlocBuilder<FavoriteBloc, FavoriteState>(
+        builder: (context, fav) {
+          return Hearticon(
+            currentSong: playlist.container[index],
+            isfav: fav.favoritelist.contains(playlist.container[index]),
+          );
+        },
       ),
       trailing2: PopupMenuButton(
           onSelected: (value) {
